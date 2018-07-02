@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Booking Form</title>
+    <meta name="generator" content="Serif WebPlus X7">
+    <meta name="viewport" content="width=750">
+    <link rel="stylesheet" type="text/css" href="wpscripts/wpstyles.css">
+    <style type="text/css">
+      .OBJ-1,.OBJ-1:link,.OBJ-1:visited { background-image:url('wpimages/wpa15decd5_06.png');background-repeat:no-repeat;background-position:0px 0px;text-decoration:none;display:block;position:absolute; }
+      .OBJ-1:hover { background-position:0px -90px; }
+      .OBJ-1:active,a:link.OBJ-1.Activated,a:link.OBJ-1.Down,a:visited.OBJ-1.Activated,a:visited.OBJ-1.Down,.OBJ-1.Activated,.OBJ-1.Down { background-position:0px -45px; }
+      .OBJ-1.Disabled,a:link.OBJ-1.Disabled,a:visited.OBJ-1.Disabled,a:hover.OBJ-1.Disabled,a:active.OBJ-1.Disabled { background-position:0px -135px; }
+      .OBJ-1:focus { outline-style:none; }
+      button.OBJ-1 { background-color:transparent;border:none 0px;padding:0;display:inline-block;cursor:pointer; }
+      button.OBJ-1:disabled { pointer-events:none; }
+      .OBJ-1.Inline { display:inline-block;position:relative;line-height:normal; }
+      .OBJ-1 span,.OBJ-1:link span,.OBJ-1:visited span { color:#ffffff;font-family:"Trebuchet MS",sans-serif;font-weight:normal;text-decoration:none;text-align:center;text-transform:none;font-style:normal;left:1px;top:14px;width:81px;height:14px;font-size:10px;display:block;position:absolute;cursor:pointer; }
+    </style>
+    <script type="text/javascript" src="wpscripts/jquery.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function() {
+      $("a.ActiveButton").bind({ mousedown:function(){if ( $(this).attr('disabled') === undefined ) $(this).addClass('Activated');}, mouseleave:function(){ if ( $(this).attr('disabled') === undefined ) $(this).removeClass('Activated');}, mouseup:function(){ if ( $(this).attr('disabled') === undefined ) $(this).removeClass('Activated');}});
+      });
+    </script>
+    <script language="JavaScript">
+var frmvalidator  = new Validator("contactform");
+frmvalidator.addValidation("name","req","Please provide your name");
+frmvalidator.addValidation("email","req","Please provide your email");
+frmvalidator.addValidation("email","email",
+  "Please enter a valid email address");
+</script>
+  </head>
+  <body style="height:1000px;background:#ffffff url('wpimages/wp2c4c9fb6_06.jpg') repeat-y scroll center top;">
+    <div id="divMain" style="background:transparent;margin-left:auto;margin-right:auto;position:relative;width:750px;height:1000px;">
+      <div style="position:absolute;left:18px;top:226px;width:496px;height:265px;">
+        <form method="post" name="contact_form"
+action="contact-form-handler.php">
+<table>
+<tr>
+<td><font color="white">Your Name:</font></td><td><input type="text" name="name" size=35></td></tr>
+<tr>
+<td><font color="white">Email Address:</font></td><td><input type="text" name="email" size=35></td></tr>
+<tr>
+<td><font color="white">Message:</font></td><td><textarea rows=6 cols=35 name="message"></textarea></td></tr>
+<tr>
+<td><input type="submit" value="Submit"></td><td></td></tr>
+</table>
+</form>
+      </div>
+      <div style="position:absolute;left:18px;top:509px;width:496px;height:338px;">
+        <iframe src="https://calendar.google.com/calendar/embed?height=400&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;mode=AGENDA&amp;wkst=1&amp;bgcolor=%23FFFFFF&amp;src=i9l1bm65oa1dr215lmsha2pcp4%40group.calendar.google.com&amp;color=%235F6B02&amp;ctz=Europe%2FLondon" style="border-width:0" width="600" height="400" frameborder="0" scrolling="no"></iframe>
+      </div>
+      <img alt="" src="wpimages/wp5d8565e1_06.png" style="position:absolute;left:18px;top:80px;width:714px;height:137px;">
+      <div style="position:absolute;left:74px;top:25px;width:601px;height:55px;">
+        <a href="index.html" id="nav_4_B1" class="OBJ-1 ActiveButton" style="display:block;position:absolute;left:49px;top:5px;width:84px;height:45px;">
+          <span>Home</span>
+        </a>
+        <a href="page7.html" id="nav_4_B2" class="OBJ-1 ActiveButton" style="display:block;position:absolute;left:133px;top:5px;width:84px;height:45px;">
+          <span>What&#39;s&nbsp;Up?</span>
+        </a>
+        <a href="page6.html" id="nav_4_B3" class="OBJ-1 ActiveButton" style="display:block;position:absolute;left:217px;top:5px;width:84px;height:45px;">
+          <span>Biography</span>
+        </a>
+        <a href="page5.html" id="nav_4_B4" class="OBJ-1 ActiveButton" style="display:block;position:absolute;left:301px;top:5px;width:84px;height:45px;">
+          <span>Talks&nbsp;List</span>
+        </a>
+        <a href="page2.html" id="nav_4_B5" class="OBJ-1 ActiveButton" style="display:block;position:absolute;left:385px;top:5px;width:84px;height:45px;">
+          <span>Gallery</span>
+        </a>
+        <a href="bookingform.html" id="nav_4_B6" class="OBJ-1 ActiveButton Down" style="display:block;position:absolute;left:469px;top:5px;width:84px;height:45px;">
+          <span>Booking&nbsp;Form</span>
+        </a>
+      </div>
+    </div>
+  </body>
+</html>
