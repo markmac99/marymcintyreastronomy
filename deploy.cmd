@@ -1,6 +1,6 @@
 c:
 Cd \Users\Mary\Documents\marymcintyreastronomy
-git add *
+git pull
 git commit -a
 git push
 pause
