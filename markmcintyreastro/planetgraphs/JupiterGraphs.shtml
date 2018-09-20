@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -34,6 +35,7 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+	<script language="javascript" src="js/cookies.js"></script>
 </head>
 
 <body>
@@ -58,6 +60,15 @@
                     <h1 class="page-header">
                     <div id="pname"></div>Jupiter</h1>
                     <!--#include virtual="location.html" -->
+                    <script language="javascript">
+                    	var x = readCookie('PGSessCookie1')
+                    	if (x) {
+                    		document.write('value is ' +x)
+                    	}
+                    	else {
+                    		document.write('Cookie not set')
+                    	}
+				     </script>
                     <a href="aboutthis.html"><i class="fa fa-user fa-fw"></i> About these calcs</a>
                 </div>
                 <!-- /.col-lg-12 -->
@@ -115,7 +126,11 @@
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
-                            <a href="data/JupiterData.csv">Raw data in CSV format</a>
+							<script>
+							    var cookloc=readCookie('PGSessCookie1');
+							    if (!cookloc) cookloc='.';
+								document.write( "<a href=\"data/"+cookloc+"/JupiterData.csv\">Data in CSV format<"+"/a>" );
+							</script>
                         </div>
                         <!-- /.panel-body -->
                     </div>
@@ -142,10 +157,16 @@
     <!-- Morris Charts JavaScript -->
     <script src="js/plugins/morris/raphael.min.js"></script>
     <script src="js/plugins/morris/morris.min.js"></script>
-	<script src="data/JupiterAltitude.js"></script>
-	<script src="data/JupiterSize.js"></script>
-	<script src="data/JupiterMagnitude.js"></script>
-    <!-- Custom Theme JavaScript -->
+
+    <script>
+    var cookloc=readCookie('PGSessCookie1');
+    if (!cookloc) cookloc='.';
+	document.write( "<script src=\"data/"+cookloc+"/JupiterAltitude.js\"><"+"/script>" );
+	document.write( "<script src=\"data/"+cookloc+"/JupiterSize.js\"><"+"/script>" );
+	document.write( "<script src=\"data/"+cookloc+"/JupiterMagnitude.js\"><"+"/script>" );
+	</script>
+
+	<!-- Custom Theme JavaScript -->
     <script src="js/sb-admin-2.js"></script>
 	<script>
 	<!--	$( "#pname" ).load( "data/planetname.txt" ); -->
