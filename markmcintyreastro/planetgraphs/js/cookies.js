@@ -22,3 +22,16 @@ function readCookie(name) {
 function eraseCookie(name) {
 	createCookie(name,"",-1);
 }
+
+function getPageName() {
+    var index = window.location.href.lastIndexOf("/") + 1;
+    var filenameWithExtension = window.location.href.substr(index);
+    var filename = filenameWithExtension.split(".")[0];
+    return filename;
+}
+
+function getPlanetName() {
+	var pgname=getPageName();
+	var res = pgname.substring(0, pgname.length-6);
+	return res;
+}

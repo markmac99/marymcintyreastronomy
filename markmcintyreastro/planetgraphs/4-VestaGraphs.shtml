@@ -34,6 +34,7 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+	<script language="javascript" src="js/cookies.js"></script>
 </head>
 
 <body>
@@ -41,22 +42,24 @@
         <!-- Navigation -->
         <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
 	    <!--#include virtual="top-bar.html" -->
-			<div class="navbar-default sidebar" role="navigation">
-				<div class="sidebar-nav navbar-collapse">
-					<ul class="nav" id="side-menu">
-					<!--#include virtual="left-menu.html" -->
-					</ul>
-				</div>
-				<!-- /.sidebar-collapse -->
-			</div>
-			<!-- /.navbar-static-side -->
+
+            <div class="navbar-default sidebar" role="navigation">
+                <div class="sidebar-nav navbar-collapse">
+                    <ul class="nav" id="side-menu">
+                    <!--#include virtual="left-menu.html" -->
+                    </ul>
+                </div>
+                <!-- /.sidebar-collapse -->
+            </div>
+            <!-- /.navbar-static-side -->
         </nav>
 
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
                     <h1 class="page-header">
-                    <div id="pname"></div>3-Juno</h1>
+                    <div id="pname"></div>
+                    <script language="javascript">var pn=getPlanetName();document.write(pn);</script></h1>
                     <!--#include virtual="location.html" -->
                     <a href="aboutthis.shtml"><i class="fa fa-user fa-fw"></i> About these calcs</a>
                 </div>
@@ -115,7 +118,13 @@
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
-                            <a href="data/3-JunoData.csv">Raw data in CSV format</a>
+							<script>
+			    				var pname=getPlanetName();
+							    var cookloc=readCookie('PGSessCookie1');
+							    if (!cookloc) cookloc='.';
+								document.write( "<a href=\"data/"+cookloc+"/"+pname+"Data.csv\">Data in CSV format<"+"/a>" );
+							</script>
+
                         </div>
                         <!-- /.panel-body -->
                     </div>
@@ -142,9 +151,16 @@
     <!-- Morris Charts JavaScript -->
     <script src="js/plugins/morris/raphael.min.js"></script>
     <script src="js/plugins/morris/morris.min.js"></script>
-	<script src="data/3-JunoAltitude.js"></script>
-	<script src="data/3-JunoSize.js"></script>
-	<script src="data/3-JunoMagnitude.js"></script>
+
+    <script>
+    var pname=getPlanetName();
+    var cookloc=readCookie('PGSessCookie1');
+    if (!cookloc) cookloc='.';
+	document.write( "<script src=\"data/"+cookloc+"/"+pname+"Altitude.js\"><"+"/script>" );
+	document.write( "<script src=\"data/"+cookloc+"/"+pname+"Size.js\"><"+"/script>" );
+	document.write( "<script src=\"data/"+cookloc+"/"+pname+"Magnitude.js\"><"+"/script>" );
+	</script>
+
     <!-- Custom Theme JavaScript -->
     <script src="js/sb-admin-2.js"></script>
 	<script>

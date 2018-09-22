@@ -6,12 +6,6 @@ require_once('calendar/classes/tc_calendar.php');
 <!DOCTYPE html>
 <html lang="en">
 <script language="javascript" src="js/cookies.js"></script>
-<script language="javascript">
-	eraseCookie('PGSessCookie1');
-	var d = new Date();
-	var cookval = d.getTime().toString();
-	createCookie('PGSessCookie1',cookval,0);
-</script>
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">

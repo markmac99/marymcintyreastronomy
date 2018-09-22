@@ -7,7 +7,7 @@
     <meta name="description" content="Planetary Observability Data.">
     <meta name="author" content="Mark McIntyre">
 	<meta name="keywords" content="******"/>
-	<meta http-equiv="refresh" content="15;JupiterGraphs.shtml" />
+	<meta http-equiv="refresh" content="3;JupiterGraphs.shtml" />
 
 
     <title>Planetary Observability Calculations</title>
