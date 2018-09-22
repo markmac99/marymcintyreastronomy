@@ -1,10 +1,4 @@
 #pragma once
-
-#ifndef _WIN32
-#define __stdcall 
-#endif 
-#include "Comets.h"
-
 #define PI			3.141592654
 #define TWOPI		6.283185307
 #define ERAD		6378.14			// km
@@ -12,7 +6,7 @@
 #define RAD2DEG		57.29577951	
 #define HR2DEG		15.04107		// precision value
 
-#define NUMELEMENTS 60
+#define NUMELEMENTS 30
 
 #define SUN			0
 #define MOON		1
@@ -25,33 +19,37 @@
 #define NEPTUNE		8
 #define EARTH		9
 #define PLUTO		10
-
-#define LASTASTEROID 20
-#define KEPLERIANLIMIT 0.98
-#define KEPLERIANCONST 0.01720209895 
+#define CERES		11
+#define PALLAS		12
+#define JUNO 		13
+#define VESTA		14
 
 typedef struct OrbitalElements
 {
-	char	name[64];		// name
-	double	N[2];			// longitude of ascending node
-	double	incl[2];		// inclination
-	double	omega[2];		// arg of perihelion
-	double	a[2];			// semimajor axis (AU except for moon which is in ERAD)
-	double	e[2];			// eccentricity
-	double	MA[2];			// mean anomaly
-	double	mag[4];			// abs magnitude
-	double	siz;			// abs size in arcsecs
-	int		epoch[3];		// epoch of data
+	char	name[64];
+	double	N[2];
+	double	incl[2];
+	double	omega[2];
+	double	a[2];
+	double	e[2];
+	double	MA[2];
+	double	mag[4];
+	double	siz;
+	int		epoch[3];
 }_OrbitalElements;
 
-extern struct OrbitalElements *elements;
+extern struct OrbitalElements elements[NUMELEMENTS];
 extern char szPath[512];
 extern char szOutputPath[512];
-extern char szErrorPath[512];
 
-int LoadOrbitalElements(void);
+int LoadAsteroidsJPL(int n);
+int LoadAsteroidsMPC(int n);
+int LoadOrbitalElements(OrbitalElements* elements);
 extern int maxloaded;
 
+#ifndef _WIN32
+#define __stdcall 
+#endif 
 double __stdcall GetDateFromDtval(double dtval, int& yy, int& mo, int& dd, int& hh, int& mm, int& ss);
 double __stdcall GetDtvalFromDate(int yy, int mo, int dd, int hh, int mm, int ss);
 

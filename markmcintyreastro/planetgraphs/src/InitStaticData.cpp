@@ -17,17 +17,11 @@ download multiple minor planet datasets here: https://ssd.jpl.nasa.gov/sbdb_quer
 Other useful pages http://www.met.rdg.ac.uk/~ross/Astronomy/Planets.html - orbital elements (slightly different values!)
 and http://cosinekitty.com/solar_system.html - calculator for comparing with my calcs
 */
-static int LoadCometData(int n);
-static int LoadAsteroidsMPC(int n);
-static void trim(char *str);
 
-int LoadOrbitalElements(void)
+int LoadOrbitalElements(OrbitalElements* elements)
 {
 	int yr = 2000, mo = 1, dy=0;
-	elements = (OrbitalElements*) calloc(NUMELEMENTS, sizeof(OrbitalElements));
-	if (!elements)
-		return 0;
-//	memset(elements, 0, sizeof(OrbitalElements)*NUMELEMENTS);
+	memset(elements, 0, sizeof(OrbitalElements)*NUMELEMENTS);
 
 	int n = 0;
 	strcpy(elements[0].name,"Sun");
@@ -304,12 +298,10 @@ int LoadOrbitalElements(void)
 		// precession correction to the longitude of the ascending node - makes very small difference!
 		elements[i].N[0] -= PrecessionCorr(epochyr, dd);
 	}
-	n = maxn;
-	maxn = LoadCometData(n);
 	return maxn;
 }
 
-static void trim(char *str)
+void trim(char *str)
 {
 	int i = 0;
 	char outstr[32] = { 0 };
@@ -320,17 +312,12 @@ static void trim(char *str)
 	outstr[i + 1] = 0;
 	strcpy(str, outstr);
 }
-static void myrtrim(char *str)
-{
-	int i = strlen(str)-1;
-	while (str[i] == ' ' && i>0)i--;
-	str[i+1] = 0;
-}
+
 
 // get data file from http://www.minorplanetcenter.net/iau/MPCORB/MPCORB.DAT.gz
 // will need to be gunzipped
 
-static int LoadAsteroidsMPC(int n)
+int LoadAsteroidsMPC(int n)
 {
 	FILE *f = NULL;
 	FILE *errf = NULL;
@@ -345,7 +332,7 @@ static int LoadAsteroidsMPC(int n)
 	{
 		sprintf(fileloc, "%s/orbitcalcs.err", szPath);
 		errf = fopen(fileloc, "w");
-		fprintf(errf, "unable to find MPCORB file in %s", szPath);
+		fprintf(errf, "unable to find file in %s", szPath);
 		fclose(errf);
 		return -1;
 	}
@@ -354,7 +341,7 @@ static int LoadAsteroidsMPC(int n)
 		fgets(line, 256, f);
 
 	int ii = 0;
-	while (fgets(line, 256, f) != NULL && ii < (LASTASTEROID-10))
+	while (fgets(line, 256, f) != NULL && ii < 10)
 	{
 		char tmp[11] = { 0 };
 		memset(name, 0, 32);
@@ -387,7 +374,7 @@ static int LoadAsteroidsMPC(int n)
 		trim(name);
 		epochyyyymmdd = atol(line + 194);
 
-		printf("Loaded %s %s %ld %lf %lf %lf\n", name, id, epochyyyymmdd, M, a, e);
+		printf("Loaded %s %s %ld %lf\n", name, id, epochyyyymmdd, M);
 		ii++;
 		strcpy(elements[n].name, name);
 		elements[n].N[0] = N; elements[n].N[1] = 0.0;
@@ -408,134 +395,6 @@ static int LoadAsteroidsMPC(int n)
 		n++;
 	}
 	fclose(f);
+
 	return n-1;
-}
-
-static void fixcometname(char* name)
-{
-	// comet names contain slashes which are not allowed in filenames
-	// spaces and brackets also might be awkward
-	for (unsigned i = 0; i < strlen(name); i++)
-	{
-		if (name[i] == '/') name[i] = '-';
-		if (name[i]==' ' || name[i] == '(') name[i] = '_';
-		if (name[i] == ')') name[i] = 0;
-	}
-}
-
-static int LoadCometData(int n)
-{
-	FILE *f = NULL;
-	FILE *errf = NULL;
-	char fileloc[512];
-	char id[13], name[57], ref[10];
-	int yr, mth;
-	double  dy; // decimal including fractional day
-	double w, N, i, e, peri;
-	double mag, slope;
-	int epochy, epochm, epochd;
-
-	sprintf(fileloc, "%s/CometEls.txt", szPath);
-	f = fopen(fileloc, "r");
-	if (f == NULL)
-	{
-		sprintf(fileloc, "%s/orbitcalcs.err", szPath);
-		errf = fopen(fileloc, "w");
-		fprintf(errf, "unable to find CometEls file in %s", szPath);
-		fclose(errf);
-		return -1;
-	}
-	char line[256] = { 0 };
-
-	int ii = 0;
-	while (fgets(line, 256, f) != NULL && ii < 10)
-	{
-		char tmp[11] = { 0 };
-		memset(name, 0, 57);
-		memset(id, 0, 13);
-		memset(ref, 0, 10);
-
-		strncpy(id, line, 12);
-		trim(id);
-
-		strncpy(tmp, line + 14, 4);
-		yr = atoi(tmp);
-		memset(tmp, 0, 11);
-		strncpy(tmp, line + 19, 2);
-		mth = atoi(tmp);
-		memset(tmp, 0, 11);
-		strncpy(tmp, line + 22, 7);
-		dy = atof(tmp);
-
-		memset(tmp, 0, 11);
-		strncpy(tmp, line + 30, 9);
-		peri = atof(tmp);
-		memset(tmp, 0, 11);
-		strncpy(tmp, line + 41, 8);
-		e = atof(tmp);
-		memset(tmp, 0, 11);
-		strncpy(tmp, line + 51, 8);
-		w = atof(tmp);
-		memset(tmp, 0, 11);
-		strncpy(tmp, line + 61, 8);
-		N = atof(tmp);
-		memset(tmp, 0, 11);
-		strncpy(tmp, line + 71, 8);
-		i = atof(tmp);
-
-		memset(tmp, 0, 11);
-		strncpy(tmp, line + 81, 4);
-		epochy = atoi(tmp);
-		memset(tmp, 0, 11);
-		strncpy(tmp, line + 85, 2);
-		epochm = atoi(tmp);
-		memset(tmp, 0, 11);
-		strncpy(tmp, line + 87,2);
-		epochd = atoi(tmp);
-
-		memset(tmp, 0, 11);
-		strncpy(tmp, line + 91, 4);
-		mag = atof(tmp);
-		memset(tmp, 0, 11);
-		strncpy(tmp, line + 96, 4);
-		slope = atof(tmp);
-
-		strncpy(name, line + 102, 56);
-		myrtrim(name);
-		strncpy(ref, line + 159, 10);
-//		trim(ref);
-
-		printf("Loaded %s %s %lf %lf\n", name, id, e, i);
-		ii++;
-
-		fixcometname(name);
-		strcpy(elements[n].name, name);
-		elements[n].N[0] = N; 
-		elements[n].incl[0] = i; 
-		elements[n].omega[0] = w; 
-		elements[n].e[0] = e;
-		if (e < KEPLERIANLIMIT) // keplerian maths ok
-		{
-			elements[n].a[0] = CometSemiMajorAxis(e, peri);
-			elements[n].MA[0] = CometMeanAnomaly(yr, mth, dy, CometPeriod(e, peri));
-		}
-		else // nonkeplerian - we need to keep the perihelion distance and date
-		{
-			elements[n].a[0] = peri;
-			elements[n].MA[0] = CometDayNumber(yr, mth, dy);
-		}
-		elements[n].mag[0] = mag; 
-		elements[n].mag[1] = slope;
-
-		elements[n].siz = 0;
-		elements[n].epoch[0] = epochy;
-		elements[n].epoch[1] = epochm;
-		elements[n].epoch[2] = epochd;
-
-		n++;
-		if (n > NUMELEMENTS)
-			break;
-	}
-	fclose(f);
-	return n - 1;
 }

@@ -59,20 +59,13 @@ void SaveOrbitalElements(void)
 void CreateOutputFiles(double lati, double longi, double dt)
 {
 	int planetno;
-	char fnam[256];
-	FILE *f5;
-
-	sprintf(fnam, "%s/ObjNames.js", szOutputPath);
-	f5 = fopen(fnam, "w");
 
 	for(planetno = MERCURY; planetno <= maxloaded; planetno++)
 	{
 		if (planetno == EARTH) planetno++;
 		FILE *f1, *f2, *f3, *f4;
+		char fnam[256];
 		char* pname = elements[planetno].name;
-
-		fprintf(f5, "%s\n", pname);
-
 		if (pname[0] == '(')
 		{
 			char tmpnam[256] = { 0 };
@@ -86,21 +79,14 @@ void CreateOutputFiles(double lati, double longi, double dt)
 			strcpy(pname, tmpnam);
 		}
 
-		int intvl = (planetno < MARS|| planetno > PLUTO ? 7 : 30);
-		int maxiters = (planetno < MARS || planetno > PLUTO ? 104 : 72);
-		if (planetno > LASTASTEROID)
-		{ // comets - daily for 3 months
-			intvl = 1;
-			maxiters = 91;
-		}
+		int intvl = (planetno < 4|| planetno > PLUTO ? 7 : 30);
+		int maxiters = (planetno < 4 || planetno > PLUTO ? 104 : 72);
 
 		sprintf(fnam, "%s/%sAltitude.js", szOutputPath, pname);
 		f1 = fopen(fnam, "w");
 		if(!f1) 
 		{ 
-			char errfnam[256];
-			sprintf(errfnam, "%s/orbitcalcs.err", szErrorPath);
-			FILE *errf = fopen(errfnam,"w+");
+			FILE *errf = fopen("/tmp/orbitcalcs.err","w");
 			fprintf(errf, "unable to open %s for writing\n", fnam);
 			fclose(errf);
 			return;
@@ -170,7 +156,6 @@ void CreateOutputFiles(double lati, double longi, double dt)
 		fclose(f3);
 		fclose(f4);
 	}
-	fclose(f5);
 }
 
 double MyRound(double input, int places, int updown)

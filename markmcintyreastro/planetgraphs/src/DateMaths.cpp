@@ -95,7 +95,7 @@ double __stdcall LSTFromDt(double dtval, double longi)
 }
 double __stdcall LocalSiderealTime(int yy, int mo, int dd, int hh, int Mm, int ss, double ll)
 {
-	double JD = JulianDate(yy, mo, dd, hh, Mm, ss);
+	double JD = JulianDate(yy, mo, dd, 0, 0, 0);
 	double t = (JD - 2451545.0) / 36525.0;
 	double ut = hh + Mm / 60.0 + ss / 3600.0;
 	double t0 = 6.697374558 + (2400.051336 * t) + (0.000025862 * t * t) + (ut * 1.0027379093);

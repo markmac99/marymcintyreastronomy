@@ -30,10 +30,9 @@ double __stdcall RiseSet(int planetno, double dtval, double  lat, double longi, 
 	double lati=0, decl=0;
 	double rs=0;
 
-	if (!elements || planetno >= NUMELEMENTS) return 0;
 	GetDateFromDtval(dtval, yy, mo, dy, hh, mm, ss);
 	dd = days(yy, mo, dy, 12, 0, 0);
-	lst = LocalSiderealTime(yy, mo, dy, 12, 0, 0, longi)/24;
+	lst = LocalSiderealTime(yy, mo, dy, 0, 0, 0, lat);
 	tz = 0; // for GMT
 
 	if(planetno > MOON)
@@ -98,7 +97,7 @@ double __stdcall TimeofTransit(int planetno, double dtval, double lat, double lo
 	// Me = mean anomaly of earth
 	// PIe = Long of Asc Node of Earth + argument of perihelion
 
-	if (!elements || planetno >= NUMELEMENTS) return 0;
+//	if (planetno > maxloaded) return 0;
 
 	double dd, lst, temp, pres;
 	int yy, mo, dy, hh, mm, ss, tz;
@@ -110,7 +109,7 @@ double __stdcall TimeofTransit(int planetno, double dtval, double lat, double lo
 
 	GetDateFromDtval(dtval, yy, mo, dy, hh, mm, ss);
 	dd = days(yy, mo, dy, 0, 0, 0);
-	lst = LocalSiderealTime(yy, mo, dy, 0, 0, 0, longi)/24;
+	lst = LocalSiderealTime(yy, mo, dy, 0, 0, 0, lat);
 	ra = PlanetXYZ(planetno, dd, 6, lst, lat, temp, pres);
 	MA = MeanAnomaly(EARTH, dd) * 180 / PI;
 	N = elements[EARTH].N[0] + elements[EARTH].N[1] * dd;
@@ -144,7 +143,7 @@ double __stdcall IsVisible(int planetno, double dtval, double lat, double longi,
 	double sunalt, planalt, sunrise, sunset0, planrise, planset0;
 	double dd, lst;
 
-	if (!elements || planetno >= NUMELEMENTS) return 0;
+//	if (planetno > maxloaded) return 0;
 
 	GetDateFromDtval(dtval, yy, mo, dy, hh, mm, ss);
 	if (vis_or_tele == 1)

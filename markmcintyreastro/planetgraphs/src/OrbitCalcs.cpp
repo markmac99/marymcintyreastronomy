@@ -8,15 +8,12 @@
 
 char szPath[512]; // path to the DLL and asteroid and comet data files
 char szOutputPath[512]; // path to the exported datafiles
-char szErrorPath[512]; // path to the log file
 int maxloaded = 0; // number of objects loaded, including the planets sun and moon
 
-struct OrbitalElements *elements=NULL;
+struct OrbitalElements elements[NUMELEMENTS];
 
 double __stdcall GetOrbitalParam(int planetno, int what)
 {
-	if (!elements || planetno >= NUMELEMENTS) return 0;
-
 	planetno = (planetno > maxloaded ? maxloaded : planetno);
 
 	if (what == 'N' || what =='n')
@@ -42,8 +39,6 @@ double __stdcall GetOrbitalParam(int planetno, int what)
 
 double __stdcall MeanAnomaly(int planetno , double dd ) 
 {
-	if (!elements || planetno >= NUMELEMENTS) return 0;
-
 	double k = elements[planetno].MA[0];
 	double p = elements[planetno].MA[1];
 
@@ -57,8 +52,6 @@ double __stdcall MeanAnomaly(int planetno , double dd )
 
 double __stdcall LongOfAscNode(int planetno, double d)
 {
-	if (!elements || planetno >= NUMELEMENTS) return 0;
-
 	double n1 = elements[planetno].N[0];
 	double n2 = elements[planetno].N[1];
 	double n = (n1 + n2 * d);
@@ -71,7 +64,6 @@ double __stdcall LongOfAscNode(int planetno, double d)
 
 double __stdcall Eccentricity(int planetno, double d)
 {
-	if (!elements || planetno >= NUMELEMENTS) return 0;
 	double e1 = elements[planetno].e[0];
 	double e2 = elements[planetno].e[1];
 	return (e1 + e2 * d);
@@ -79,7 +71,6 @@ double __stdcall Eccentricity(int planetno, double d)
 
 double __stdcall Inclination(int planetno, double d)
 {
-	if (!elements || planetno >= NUMELEMENTS) return 0;
 	double e1 = elements[planetno].incl[0];
 	double e2 = elements[planetno].incl[1];
 	return (e1 + e2 * d)/RAD2DEG;
@@ -102,7 +93,6 @@ double __stdcall EccentricAnomaly(double m, double e)
 
 double __stdcall ArgOfPerihelion(int planetno, double dd)
 {
-	if (!elements || planetno >= NUMELEMENTS) return 0;
 	double k = elements[planetno].omega[0];
 	double d = elements[planetno].omega[1];
 	double aop = (k + d * dd) / RAD2DEG;
@@ -124,26 +114,22 @@ double __stdcall PrecessionCorr(double epoch, double dd)
 
 double __stdcall SunLongitude(double v, double dd)
 {
-	if (!elements) return 0;
 	double w = ArgOfPerihelion(SUN, dd);
 	return (v + w);
 }
 
 double __stdcall SunRA(double dd)
 {
-	if (!elements) return 0;
 	return (PlanetXYZ(SUN, dd, 6, 0, 0, 0, 0));
 }
 double __stdcall SunDec(double dd)
 {
-	if (!elements) return 0;
 	return (PlanetXYZ(SUN, dd, 7, 0, 0, 0, 0));
 }
 
 
 double __stdcall PlanDist(int planetno, double dd)
 {
-	if (!elements || planetno >= NUMELEMENTS) return 0;
 	if (planetno == PLUTO)
 	{
 		double lonecl, latecl, r;
@@ -164,7 +150,6 @@ double __stdcall PlanDist(int planetno, double dd)
 
 double __stdcall PlanTrueAnomaly(int planetno, double d)
 {
-	if (!elements || planetno >= NUMELEMENTS) return 0;
 	double m = MeanAnomaly(planetno, d);
 	double e = Eccentricity(planetno, d);
 	double ea = EccentricAnomaly(m, e);
@@ -213,7 +198,7 @@ double __stdcall AzFromRADec(double  lst, double ra, double dec, double lat, int
 
 double __stdcall AltAtTransit(int planetno, double dtval, double lat, double longi, double temp, double pres)
 {
-	if (!elements || planetno >= NUMELEMENTS) return 0;
+//	if (planetno > maxloaded) return 0;
 	double tt = TimeofTransit(planetno, dtval, lat, longi);
 	double dd = AstroDaysFromDt(dtval + tt / 24.0);
 	double lst = LSTFromDt(dtval + tt/24.0, longi)/24.0;
@@ -225,66 +210,26 @@ double __stdcall PlanetXYZ(int planetno, double dd, int xyz, double lst, double 
 	double lonecl, latecl, r, v;
 	double xh, yh, zh, ra, decl, azi, alti;
 
-	if (!elements || planetno >= NUMELEMENTS) return 0;
+//	if (planetno > maxloaded) return 0;
 
 	if (planetno != PLUTO)
 	{
-		double w = ArgOfPerihelion(planetno, dd);
-		double i = Inclination(planetno, dd);
-		double m = MeanAnomaly(planetno, dd);
-		double e = Eccentricity(planetno, dd);
+		double a = elements[planetno].a[0] + dd * elements[planetno].a[1];
 		double N = (elements[planetno].N[0] + dd * elements[planetno].N[1]) / RAD2DEG;
 
-		if (e < KEPLERIANLIMIT) // eccentricity isn't too crazy
-		{
-			double a = elements[planetno].a[0] + dd * elements[planetno].a[1];
-			double ea = EccentricAnomaly(m, e);
+		double m = MeanAnomaly(planetno, dd);
+		double e = Eccentricity(planetno, dd);
+		double ea = EccentricAnomaly(m, e);
+		double w = ArgOfPerihelion(planetno, dd);
+		double i = Inclination(planetno, dd);
 
-			// location in its own orbit
-			double xv = cos(ea) - e;
-			double yv = sqrt(1.0 - e *e) * sin(ea);
+		// location in its own orbit
+		double xv = cos(ea) - e;
+		double yv = sqrt(1.0 - e *e) * sin(ea);
 
-			// distance and true anomaly from perihelion
-			r = a * sqrt(xv*xv + yv*yv);
-			v = atan2(yv, xv);
-		}
-		else // comet with high eccentricity and possibly even parabolic
-		{
-			double q = elements[planetno].a[0]; // perihelion distance
-			double dc = elements[planetno].MA[0]; // datetime of perihelion
-			double deltad = dd - dc;
-
-			if (fabs(e-1) < 1e-7) //parabolic
-			{
-				double H = deltad * (KEPLERIANCONST / sqrt(2)) / pow(q, 1.5);
-				double h = 1.5 * H;
-				double g = sqrt(1.0 + h*h);
-				double s = pow(g + h, 1.0 / 3.0) - pow(g - h, 1.0 / 3.0);
-
-				// distance and true anomaly from perihelion
-				v = 2.0 * atan(s);
-				r = q* (1.0 + s*s); 
-			}
-			else // near parabolic - accurate up to about 40 AU
-			{
-				double a = 0.75 * deltad * KEPLERIANCONST * sqrt((1 + e) / (q*q*q));
-				double b = sqrt(1 + a*a);
-				double W = pow(b + a, 1.0/3.0) - pow(b - a,1.0/3.0);
-				double f = (1 - e) / (1 + e);
-
-				double a1 = (2.0 / 3.0) + (2.0 / 5.0) * W*W;
-				double a2 = (7.0 / 5.0) + (33.0 / 35.0) * W*W + (37.0 / 175.0) * W*W*W*W;
-				double a3 = W*W * ((432.0 / 175.0) + (956.0 / 1125.0) * W*W + (84.0 / 1575.0) * W*W*W*W);
-
-				double C = W*W / (1 + W*W);
-				double g = f * C*C;
-				double w = W * (1 + f * C * (a1 + a2*g + a3*g*g));
-
-				// distance and true anomaly from perihelion
-				v = 2 * atan(w);
-				r = q * (1 + w*w) / (1 + w*w * f);
-			}
-		}
+		// distance and true anomaly from perihelion
+		r = a * sqrt(xv*xv + yv*yv);
+		v = atan2(yv, xv);
 
 		// calculate heliocentric coords excluding perturbations
 		// nb these coords are *geo*centric for the moon

@@ -12,19 +12,10 @@ extern "C" BOOL WINAPI DllMain(HANDLE hinstDLL, DWORD fdwReason, LPVOID lpvReser
 	switch (fdwReason)
 	{
 	case DLL_PROCESS_ATTACH:
-		char fname[512];
 		GetModuleFileNameA((HMODULE)hinstDLL, szPath, sizeof szPath);
 		PathRemoveFileSpecA(szPath);
-		sprintf(fname, "%s/OrbitCalcs.ini", szPath);
-		GetPrivateProfileStringA("OrbitalElements", "Asteroids", "c:/temp", szPath, 512, fname);
-		GetPrivateProfileStringA("Output", "DataFiles", "c:/temp", szOutputPath, 512, fname);
-		GetPrivateProfileStringA("Output", "Errors", "c:/temp", szOutputPath, 512, fname);
-		maxloaded = LoadOrbitalElements();
+		maxloaded = LoadOrbitalElements(elements);
 
-		break;
-	case DLL_PROCESS_DETACH:
-		if (elements) 
-			free(elements);
 		break;
 	}
 	return TRUE;
