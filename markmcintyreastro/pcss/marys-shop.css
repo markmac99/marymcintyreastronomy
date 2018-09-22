@@ -1,0 +1,23 @@
+h2#imPgTitle {float: left; margin-left: 6px; margin-right: 6px; width: 936px;}
+#imCell_1 { display: block; position: relative; overflow: hidden; width: 944px; min-height: 310px; padding-top: 3px; padding-bottom: 3px; padding-left: 3px; padding-right: 3px;}
+#imCellStyle_1 { position: relative; width: 938px; min-height: 304px; padding: 3px 3px 3px 3px; text-align: center; border-top: 0; border-bottom: 0; border-left: 0; border-right: 0; z-index: 2;}
+#imCellStyleGraphics_1 { position: absolute; top: 3px; bottom: 3px; left: 3px; right: 3px; background-color: transparent; }
+#imProductList_1 h4 { margin-bottom: 1em; }
+#imProductList_1 .imProductListCont { position: relative; text-align: left; float: left; width: 449px; padding: 8px; height: 132px; border-top: 1px solid #808080; border-bottom: 1px solid #808080; border-left: 1px solid #808080; border-right: 1px solid #808080; background-color: #FFFFFF; font: normal normal normal 8.0pt Tahoma; color: #000000; background-color: #FFFFFF; text-decoration: none;  margin: 0 4px 4px 0; }
+#imProductList_1 .imProductListCont.imLastRow { margin-bottom: 0 }
+#imProductList_1 .imProductListCont.imLastCol { margin-right: 0 }
+#imProductList_1 input { border-radius: 0px; box-shadow: none; position: absolute; bottom: 0; width: 30px; height: 17px; border: 1px solid #000000; background-color: #FFFFFF; font: normal normal normal 8.0pt Tahoma; color: #000000; text-decoration: none; ; text-align: right; padding-left: 5px; padding-right: 5px; }
+#imProductList_1 .imProductListPrice { position: absolute; bottom: 0; left: 0; padding: 4px 0; display: block; }
+#imProductList_1 select { border: 1px solid #000000; display: inline-block; line-height: 22px; height: 22px; font: normal normal normal 8.0pt Tahoma; color: #000000; background-color: #FFFFFF; text-decoration: none; }
+#imProductList_1 .imProductListText .product-options,
+#imProductList_1 .imProductListText .product-availability { height: 24px; margin: 0 0 6px 0; }
+#imProductList_1 .imProductListImage { float: left; }
+#imProductList_1 .imProductListText { float: right; }
+#imProductList_1 .imProductListImage { text-align: center; width: 224px; padding: 0; }
+#imProductList_1 .imProductListImage img { vertical-align: top; }
+#imProductList_1 .imProductListText { position: relative; width: 216px; height: 132px; }
+#imProductList_1 .imProductListText .overflow-controller { margin-bottom: 10px; overflow: auto; }
+#imProductList_1 .imProductListText .height-1 { height: 96px; }
+#imProductList_1 .imProductListText .height-2 { height: 66px; }
+#imProductList_1 .imProductListText .height-3 { height: 36px; }
+#imProductList_1 .imProductListText .height-4 { height: 6px; }
