@@ -1,0 +1,56 @@
+EnvironmentConfigurationMetadata:
+  DateCreated: '1530567510000'
+  DateModified: '1530567510000'
+Platform:
+  PlatformArn: arn:aws:elasticbeanstalk:eu-west-2::platform/PHP 7.0 running on 64bit Amazon Linux/2.7.1
+OptionSettings:
+  aws:elb:loadbalancer:
+    LoadBalancerHTTPSPort: '443'
+    SSLCertificateId: arn:aws:acm:eu-west-2:317976261112:certificate/ef9b7cce-5c73-42d7-8874-a5851a1f3c39
+  aws:elb:listener:444:
+    ListenerEnabled: true
+    InstancePort: '80'
+    ListenerProtocol: HTTPS
+    SSLCertificateId: arn:aws:acm:eu-west-2:317976261112:certificate/4d9d2db3-43c3-4381-b454-9fac0c1e24ab
+    InstanceProtocol: HTTP
+  aws:elasticbeanstalk:environment:
+    ServiceRole: aws-elasticbeanstalk-service-role
+    EnvironmentType: LoadBalanced
+  aws:elasticbeanstalk:healthreporting:system:
+    SystemType: enhanced
+  aws:autoscaling:launchconfiguration:
+    IamInstanceProfile: aws-elasticbeanstalk-ec2-role
+    EC2KeyName: markskey
+  aws:autoscaling:updatepolicy:rollingupdate:
+    RollingUpdateType: Health
+    RollingUpdateEnabled: true
+EnvironmentTier:
+  Type: Standard
+  Name: WebServer
+Extensions:
+  MMAWebsiteDown.EBConsoleSnippet:
+    Order: 500
+    SnippetContents:
+      Resources:
+        MMAWebsiteDown:
+          Type: AWS::CloudWatch::Alarm
+          Properties:
+            AlarmActions:
+            - arn:aws:sns:eu-west-2:317976261112:ElasticBeanstalkNotifications-maryastrotalks-marysastrotalks-marysastrotalks
+            MetricName: EnvironmentHealth
+            ComparisonOperator: GreaterThanThreshold
+            AlarmDescription: Marys Website Down
+            Statistic: Maximum
+            Period: 60
+            Dimensions:
+            - Value:
+                Ref: AWSEBEnvironmentName
+              Name: EnvironmentName
+            EvaluationPeriods: 1
+            InsufficientDataActions: []
+            Namespace: AWS/ElasticBeanstalk
+            OKActions: []
+            Threshold: 1
+AWSConfigurationTemplateVersion: 1.1.0.0
+Tags:
+  billingtag: Maryswebsite
