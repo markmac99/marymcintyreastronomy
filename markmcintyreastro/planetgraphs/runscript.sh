@@ -5,5 +5,5 @@ echo     var x = readCookie\(\'PGSessCookie1\'\) >> location.html
 echo     if \(\!x\) { document.write\(\'Cookie not set\'\)} >> location.html
 echo \</script\> >> location.html
 
-mkdir /var/www/html/planetgraphs/data/$4
-./orbitcalcs $1 $2 $3 /var/www/html/planetgraphs/data/$4
+mkdir /var/www/html/markmcintyreastro/planetgraphs/data/$4
+./orbitcalcs $1 $2 $3 /var/www/html/markmcintyreastro/planetgraphs/data/$4
