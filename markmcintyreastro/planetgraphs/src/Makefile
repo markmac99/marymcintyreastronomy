@@ -19,9 +19,9 @@ all: orbitcalcs cometpp pgsummary
 default: orbitcalcs
 
 install: orbitcalcs cometpp pgsummary
-	install -m 755 orbitcalcs /var/www/html/planetgraphs/
-	install -m 755 cometpp /var/www/html/planetgraphs/
-	install -m 755 pgsummary /var/www/html/planetgraphs/
+	install -m 755 orbitcalcs /var/www/html/markmcintyreastro/planetgraphs/
+	install -m 755 cometpp /var/www/html/markmcintyreastro/planetgraphs/
+	install -m 755 pgsummary /var/www/html/markmcintyreastro/planetgraphs/
 	
 orbitcalcs: main.o DateMaths.o InitStaticData.o MagAndSize.o OrbitCalcs.o Perturbations.o Pluto.o TransitRiseSet.o Outputter.o Comets.o
 	$(CC) $(CFLAGS) -o orbitcalcs main.o DateMaths.o InitStaticData.o MagAndSize.o OrbitCalcs.o Perturbations.o Pluto.o TransitRiseSet.o Outputter.o Comets.o -lstdc++ -lm
