@@ -1,0 +1,19 @@
+Home page
+Table of planets, minor planets and comets with mag > 14
+For today's date and my location, show
+  name
+  magnitude
+  RA & Dec
+  Best Alt and Az
+  Rise & Set
+  Constellation
+Allow user to change location and date - can use existing form but set cookies
+Have a recalculate button that executes the C++ to rework the graphs
+
+Clickable links on the names to 
+ graph of best alt, size and mag  - for comets do it over 90 days
+ Table of estimated RA and Dec at suitable intervals
+ Downloadable CSV of date, alt, az, mag, size, ra, dec
+ 
+ 
+ 

@@ -1,7 +1,22 @@
+#define _CRT_SECURE_NO_WARNINGS 1
+
 #include "OrbitCalcs.h"
 #include <time.h>
+#include <stdio.h>
 
 // model taken from http://www.stjarnhimlen.se/comp/ppcomp.html
+
+char* TimeToStr(double t) 
+{
+	static char retval[8] = { 0 };
+	int h = (int)t;
+	double mins = 60 * (t - h);
+	int m = (int)mins;
+	double secs = 60 * (mins - m);
+	int s = (int)secs;
+	sprintf(retval, "%02d:%02d:%02d", h, m, s);
+	return retval;
+}
 
 double __stdcall AstroDaysFromDt(double dtval)
 {

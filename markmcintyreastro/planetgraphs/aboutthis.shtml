@@ -85,9 +85,9 @@
                             are quite variable, especially the smaller ones, so do not expect much accuracy beyond 100 days.
                             <br>
                             <br>
-                            <b>Be sure to set your location first via the Switch Location page</b> <br>
-                            Also do check the location before using the data. The calculator is not multi-user and so if
-                            someone else changes the location, all pages will reflect that new location!
+                            <b><font color="red">Be sure to set your location first via the Switch Location page</font></b> <br>
+                            <a href="dynapage.php">Click here</a> to go to the location page.
+                            Also do check the location before using the data.
 
 
                             <br><br>

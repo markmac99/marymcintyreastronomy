@@ -1,7 +1,10 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 
-#include <math.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include <math.h>
 #include "OrbitCalcs.h"
 
 // model taken from http://www.stjarnhimlen.se/comp/ppcomp.html
@@ -210,7 +213,8 @@ double __stdcall PlanetXYZ(int planetno, double dd, int xyz, double lst, double 
 	double lonecl, latecl, r, v;
 	double xh, yh, zh, ra, decl, azi, alti;
 
-//	if (planetno > maxloaded) return 0;
+//	if (planetno == 11)
+//		printf("%f %d %f %f %f %f \n", dd, xyz, lst, lat, temp, pres);
 
 	if (planetno != PLUTO)
 	{
@@ -238,6 +242,9 @@ double __stdcall PlanetXYZ(int planetno, double dd, int xyz, double lst, double 
 		zh = r * (sin(v + w) * sin(i));
 
 		r = sqrt(xh*xh + yh*yh + zh*zh);
+		
+//		if (planetno == 11) 
+//			printf("%f %f %f %f %f %f %f %f \n", e, w, a, N, m, xh, yh, zh);
 
 		// coords in ecliptic plane
 		lonecl = atan2(yh, xh);
@@ -308,10 +315,13 @@ double __stdcall PlanetXYZ(int planetno, double dd, int xyz, double lst, double 
 		double ze = yh * sin(ecl) + zh * cos(ecl);
 		ra = atan2(ye, xe) * RAD2DEG;
 		decl = atan2(ze, sqrt(xe*xe + ye*ye)) * RAD2DEG;
+
 		while (ra < 0)
 			ra = ra + 360.0;
 		while (ra > 360.0)
 			ra = ra - 360.0;
+
+//		if (planetno == 11) printf("%f %f %f %f %f %f %f %f \n", ra, decl, xe, ye, ze, xh, yh, zh);
 
 		azi = AzFromRADec(lst, ra, decl, lat, 0, temp, pres);
 		alti = AzFromRADec(lst, ra, decl, lat, 1, temp, pres);
@@ -344,3 +354,44 @@ double __stdcall PlanetXYZ(int planetno, double dd, int xyz, double lst, double 
 }
 
 
+void trim(char *str)
+{
+	int i = 0;
+	char outstr[64] = { 0 };
+	while (str[i] == ' ')i++;
+	strcpy(outstr, str + i);
+	i = strlen(outstr) - 1;
+	while (outstr[i] == ' ')i--;
+	outstr[i + 1] = 0;
+	strcpy(str, outstr);
+}
+
+void cleanup_name(char* str)
+{
+	int i = 0;
+	char outstr[64] = { 0 };
+	trim(str);
+	strcpy(outstr, str);
+	for (i = 0; i < (int)strlen(outstr); i++)
+	{
+		if (outstr[i] == '/') outstr[i] = '-';
+		if (outstr[i] == ' ') outstr[i] = '-';
+		if (outstr[i] == '(') 
+			strcpy(&outstr[i], &outstr[i+1]);
+		if (outstr[i] == ')') 
+			strcpy(&outstr[i], &outstr[i + 1]);
+		if (outstr[i] == ' ') outstr[i] = '-';
+	}
+	trim(outstr);
+	strcpy(str, outstr);
+}
+
+char* fmt_hours(double ra)
+{
+	static char ret[6] = { 0 };
+	ra /= 15.0;
+	int hr = (int)ra;
+	int min = (int)(60 * (ra - hr));
+	sprintf(ret, "%02d:%02d", hr, min);
+	return ret;
+}

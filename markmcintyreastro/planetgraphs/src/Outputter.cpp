@@ -1,4 +1,5 @@
 #include "OrbitCalcs.h"
+#include "Comets.h"
 
 // shaddap with the fopen warnings
 #define _CRT_SECURE_NO_WARNINGS 1
@@ -107,7 +108,7 @@ void CreateOutputFiles(double lati, double longi, double dt)
 		double minbri = 200;
 		double minalt = 0;
 		double maxalt = 0;
-		fprintf(f4, "Date,Altitude,Magnitude,size\n");
+		fprintf(f4, "Date, Best Altitude, Magnitude, Size, Best Azimith, RA, Dec\n");
 
 		for (int i = 0; i <= maxiters; i++)
 		{
@@ -121,7 +122,6 @@ void CreateOutputFiles(double lati, double longi, double dt)
 			if (brig > maxbri) maxbri = brig;
 			if (brig < minbri) minbri = brig;
 			if (alti > maxalt) maxalt = alti;
-//			long tmst = DtvalToUnixTS(dt + intvl * i);
 			long tms2 = DtvalToUnixTS(dt + intvl * i + best);
 
 			if (i < maxiters)
@@ -138,8 +138,14 @@ void CreateOutputFiles(double lati, double longi, double dt)
 			}
 			int yy, mo, dy, hh, mm, ss;
 			GetDateFromDtval(dt + intvl * i + best, yy, mo, dy, hh, mm, ss);
-			
-			fprintf(f4, "%4.4d-%2.2d-%2.2d %2.2d:%2.2d:%2.2d, %.2lf, %.2lf, %.2lf\n", yy, mo, dy, hh, mm, ss, alti, brig, siz);
+			double dd = days(yy, mo, dy, 0, 0, 0);
+			double lst = LocalSiderealTime(yy, mo, dy, 0, 0, 0, longi);
+			double ra = PlanetXYZ(planetno, dd, 6, lst, lati, 10, 1010);
+			double dec = PlanetXYZ(planetno, dd, 7, lst, lati, 10, 1010);
+			double azi = PlanetXYZ(planetno, dd, 9, lst, lati, 10, 1010);
+
+			fprintf(f4, "%4.4d-%2.2d-%2.2d %2.2d:%2.2d:%2.2d, %.2lf, %.2lf, %.2lf, %.2lf, %s, %02lf\n", 
+				yy, mo, dy, hh, mm, ss, alti, brig, siz, azi, fmt_hours(ra), dec);
 		}
 
 		maxbri = MyRound(maxbri, 0, 1);
@@ -156,6 +162,107 @@ void CreateOutputFiles(double lati, double longi, double dt)
 		fclose(f3);
 		fclose(f4);
 	}
+	CometOutputter(lati, longi, dt);
+}
+
+void CometOutputter(double lati, double longi, double dt)
+{
+	FILE* inf;
+	char fnam[256];
+	sprintf(fnam, "%s/%s", szPath, "VisCometEls.txt");
+	inf = fopen(fnam, "r");
+	double temp = 10, press = 1010;
+	int sts = 1;
+	while (sts) 
+	{
+		FILE *f1, *f2, *f4;
+		sts = readoneline(inf);
+		if (!sts)
+			break;
+		int intvl = 1; 
+		int maxiters = 90;
+		cleanup_name(aComet.name);
+		char* pname = aComet.name;
+
+		sprintf(fnam, "%s/%sAltitude.js", szOutputPath, pname);
+		f1 = fopen(fnam, "w");
+		sprintf(fnam, "%s/%sMagnitude.js", szOutputPath, pname);
+		f2 = fopen(fnam, "w");
+		//sprintf(fnam, "%s/%sSize.js", szOutputPath, pname);
+		//f3 = fopen(fnam, "w");
+		sprintf(fnam, "%s/%sData.csv", szOutputPath, pname);
+		f4 = fopen(fnam, "w");
+
+		addHeader(f1, pname, "altitude");
+		addHeader(f2, pname, "magnitude");
+		//addHeader(f3, pname, "size");
+		//double minsiz = 100;
+		//double maxsiz = 0;
+		double maxbri = -20;
+		double minbri = 200;
+		double minalt = 0;
+		double maxalt = 0;
+		fprintf(f4, "Date, Best Altitude, Magnitude, Size, Best Azimith, RA, Dec\n");
+
+		for (int i = 0; i <= maxiters; i++)
+		{ 
+			int yr, mth, dy, hh, mm, ss;
+			GetDateFromDtval(dt + intvl * i, yr, mth, dy, hh, mm, ss);
+			double dd = days(yr, mth, dy, 0, 0, 0);
+			double lst = LocalSiderealTime(yr, mth, dy, 0, 0, 0, longi);
+
+			double sundist = CometSunDist(aComet.peri, aComet.e, yr, mth, dy, aComet.yr, aComet.mth, aComet.dy);
+			double earthdist = CometEarthDist(aComet.peri, aComet.e, yr, mth, dy, aComet.yr, aComet.mth, aComet.dy,
+				aComet.N, aComet.omega, aComet.incl);
+			double mag = CometMagnitude(aComet.mag[0], aComet.mag[1], sundist, earthdist);
+
+			double ra, decl, azi, alti;
+
+			// get the declination to work out if the comet is visible
+			earthdist = CometXYZ(aComet.peri, aComet.e, yr, mth, dy, aComet.yr, aComet.mth, aComet.dy,
+				aComet.N, aComet.omega, aComet.incl, temp, press, lst, lati, ra, decl, alti, azi);
+			
+			double best = GenericTimeofTransit(dd, ra, 0, longi)/24.0; //tz=0 == GMT
+			hh = (int)(best*24.0);
+			mm = (int)((best *24.0 - hh) * 60);
+			lst = LocalSiderealTime(yr, mth, dy, hh, mm, 0, longi)/24.0;
+			earthdist = CometXYZ(aComet.peri, aComet.e, yr, mth, dy+best, aComet.yr, aComet.mth, aComet.dy,
+				aComet.N, aComet.omega, aComet.incl, temp, press, lst, lati, ra, decl, alti, azi);
+
+			if (mag > maxbri) maxbri = mag;
+			if (mag < minbri) minbri = mag;
+			if (alti > maxalt) maxalt = alti;
+			long tms2 = DtvalToUnixTS(dt + intvl * i + best);
+			if (i < maxiters)
+			{
+				fprintf(f1, "{time: %ld000, altitude: %.2lf},\n", tms2, alti);
+				fprintf(f2, "{time: %ld000, magnitude: %.2lf},\n", tms2, mag);
+			//	fprintf(f3, "{time: %ld000, size: %.2lf},\n", tms2, siz);
+			}
+			else
+			{
+				fprintf(f1, "{time: %ld000, altitude: %.2lf}],\n", tms2, alti);
+				fprintf(f2, "{time: %ld000, magnitude: %.2lf}],\n", tms2, mag);
+			//	fprintf(f3, "{time: %ld000, size: %.2lf}],\n", tms2, siz);
+				GetDateFromDtval(dt + intvl * i + best, yr, mth, dy, hh, mm, ss);
+				fprintf(f4, "%4.4d-%2.2d-%2.2d %2.2d:%2.2d:%2.2d, %.2lf, %.2lf, %.2lf, %.2lf, %s, %02lf\n",
+					yr, mth, dy, hh, mm, ss, alti, mag, 0.0, azi, fmt_hours(ra), decl);
+			}
+
+		}
+		maxbri = MyRound(maxbri, 0, 1);
+		minbri = MyRound(minbri, 0, 2);
+		maxalt = MyRound(maxalt * 1.2, 2, 1);
+
+		addFooter(f1, "\\xB0", "altitude", minalt, maxalt);
+		fclose(f1);
+		addFooter(f2, " mag", "magnitude", maxbri, minbri);
+		fclose(f2);
+		//addFooter(f3, " as", "size", minsiz, maxsiz);
+		//fclose(f3);
+		fclose(f4);
+	}
+	fclose(inf);
 }
 
 double MyRound(double input, int places, int updown)

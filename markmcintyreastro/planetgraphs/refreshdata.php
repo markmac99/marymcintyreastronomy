@@ -1,3 +1,20 @@
+<?php
+	date_default_timezone_set('Europe/London');
+	$a1 = $_GET['Lat'];
+	$a2 = $_GET['Long'];
+	$a3 = date('Ymd');
+	$a3 = $_GET['date5'];
+	if ($a1=='') { $a1='51.88'; }
+	if ($a2=='') { $a2='-1.31'; }
+	setcookie("PGLati", $a1);
+	setcookie("PGLongi", $a2);
+	if (isset($_COOKIE['PGSessCookie1'])) {
+		$mycookie=$_COOKIE['PGSessCookie1'];
+	}
+	else {
+		echo 'cookie not set !';
+	}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,7 +24,7 @@
     <meta name="description" content="Planetary Observability Data.">
     <meta name="author" content="Mark McIntyre">
 	<meta name="keywords" content="******"/>
-	<meta http-equiv="refresh" content="3;JupiterGraphs.shtml" />
+	<meta http-equiv="refresh" content="3;home.shtml" />
 
 
     <title>Planetary Observability Calculations</title>
@@ -128,22 +145,7 @@
         <!-- Page Content -->
 
         <div id="page-wrapper">
-			<?php
-			date_default_timezone_set('Europe/London');
-			$a1 = $_GET['Lat'];
-			$a2 = $_GET['Long'];
-			$a3 = $_GET['date5'];
-			$a3 = date('Ymd');
-			if (is_null($a1)) { $a1='51.88'; }
-			if ($a1=='') { $a1='51.88'; }
-			if ($a2=='') { $a2='-1.31'; }
-			if (isset($_COOKIE['PGSessCookie1'])) {
-				$mycookie=$_COOKIE['PGSessCookie1'];
-			}
-			else {
-				echo 'cookie not set !';
-			}
-
+        <?php
 			$mystr = "./runscript.sh ". $a1. " ". $a2." ".$a3." ".$mycookie;
 			shell_exec($mystr);
 			echo($mystr);

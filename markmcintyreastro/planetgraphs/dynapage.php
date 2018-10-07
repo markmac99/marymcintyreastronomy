@@ -84,9 +84,8 @@ require_once('calendar/classes/tc_calendar.php');
                         </div>
                         <div class="panel-body">
 							  <p class="largetxt"><b>Select start date and drag the marker to your location</b></p>
-	                            Current <!--#include virtual="location.html" -->
 							  <form name="form1" method="GET" action="./refreshdata.php">
-							  <?php
+							  <!-- ?php
 							  $myCalendar = new tc_calendar("date5", true, false);
 							  $myCalendar->setTimezone("Europe/London");
 							  $myCalendar->setIcon("calendar/images/iconCalendar.gif");
@@ -95,7 +94,7 @@ require_once('calendar/classes/tc_calendar.php');
 							  $myCalendar->setDateFormat('j F Y');
 							  $myCalendar->setAlignment('left', 'bottom');
 							  $myCalendar->writeScript();
-							  ?>
+							  ? -->
 							  <div id="google_map" style="width:600px;height:600px;"></div>
 							  <div id="Latmark">Nothing yet...</div>
 							  <div id="Longmark">Nothing yet...</div>
