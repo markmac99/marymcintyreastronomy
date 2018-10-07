@@ -1,4 +1,4 @@
 #!/bin/bash
-cd `dirname $0`
-./cometpp ./CometEls.txt ./VisCometEls.txt `dirname $0`
-./pgsummary ./CometEls.txt ./data/planetpositions.js `dirname $0`
+cd /var/www/html/markmcintyreastro/planetgraphs
+./cometpp ./CometEls.txt ./VisCometEls.txt /var/www/html/markmcintyreastro/planetgraphs
+./pgsummary ./CometEls.txt ./data/planetpositions.js /var/www/html/markmcintyreastro/planetgraphs
