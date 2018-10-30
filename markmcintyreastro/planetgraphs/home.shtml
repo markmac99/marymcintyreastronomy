@@ -71,10 +71,13 @@
                             through will then display data for your chosen lat and long.
                             Details of how I calculate this are given on the <a href="aboutthis.shtml">About</a> page
                             </p>
-                            <script>
-                            var f=getConstellation(12.5,12.5,2000);
-                            document.write("Cons is " + f);</script>
-                            </script>
+							<script language="javascript">
+								var lati=readCookie('PGLati');
+								if (!lati) lati='51.88';
+								var longi=readCookie('PGLongi');
+								if (!longi) longi='-1.31';
+								document.write("\<font color=\"Red\"\> Observer location " + lati +" " +longi+ "\<font\>" );
+							</script>
                         </div>
 
 						<!-- /.col-lg-12 -->

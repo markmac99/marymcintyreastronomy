@@ -2,7 +2,7 @@ html {position: relative; margin: 0; padding: 0; background-color: #E0E0E0; back
 body {margin: 0; padding: 0; text-align: left;}
 #imPage {margin: 15px auto 15px auto; width: 960px; position: relative;}
 #imHeaderBg {position: absolute; left: 0; top: 0; height: 165px; width: 100%; background-color: transparent; background-image: url('headerbg.jpg'); background-position: center top; background-repeat: repeat;}
-#imHeader {margin-bottom: 36px; height: 150px; background-color: transparent;}
+#imHeader {margin-bottom: 36px; height: 150px; background-color: transparent; background-image: url('top.png'); background-position: top left; background-repeat: no-repeat;}
 #imMnMn {position: absolute; top: 150px; left: 0;  height: 26px; width: 950px; padding: 5px 5px 5px 5px; background-color: #7BB5EF;}
 #imMnMn > ul { text-align: left; }
 #imMnMn li {display: inline}

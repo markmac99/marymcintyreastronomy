@@ -2,10 +2,8 @@
 require_once('calendar/classes/tc_calendar.php');
 ?>
 
-
 <!DOCTYPE html>
 <html lang="en">
-<script language="javascript" src="js/cookies.js"></script>
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -34,16 +32,15 @@ require_once('calendar/classes/tc_calendar.php');
     <!-- Custom Fonts -->
     <link href="font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
-	<link href="calendar/calendar.css" rel="stylesheet" type="text/css" />
-	<script language="javascript" src="calendar/calendar.js"></script>
-
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
 
+    <![endif]-->
+	<script language="javascript" src="js/cookies.js"></script>
+	<script language="javascript" src="js/constellation.js"></script>
     <style>
 	  #google_map1 {
 	    width: 110%;
@@ -54,7 +51,6 @@ require_once('calendar/classes/tc_calendar.php');
 	    padding: 0;
 	  }
 	</style>
-
 </head>
 
 <body>
@@ -64,12 +60,11 @@ require_once('calendar/classes/tc_calendar.php');
 	    <!--#include virtual="top-bar.html" -->
 
             <div class="navbar-default sidebar" role="navigation">
-                <div class="sidebar-nav navbar-collapse">
+                <div class="sidebar-nav">
                     <ul class="nav" id="side-menu">
-                    <!--#include virtual="left-menu.html" -->
+                     <!--#include virtual="left-menu.html" -->
                     </ul>
                 </div>
-                <!-- /.sidebar-collapse -->
             </div>
             <!-- /.navbar-static-side -->
         </nav>
@@ -105,6 +100,11 @@ require_once('calendar/classes/tc_calendar.php');
 									var oxford = {lat: 51.88, lng: -1.31};
 									var map = new google.maps.Map(document.getElementById('google_map'), {
 									  zoom: 6,
+									  zoomControl: false,
+									  scaleControl: false,
+									  rotateControl: false,
+									  streetViewControl: false,
+									  fullscreenControl: false,
 									  center: oxford
 									});
 									var marker = new google.maps.Marker({
@@ -149,17 +149,18 @@ require_once('calendar/classes/tc_calendar.php');
     <!-- jQuery -->
     <script src="js/jquery.js"></script>
 
-
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>
 
     <!-- Metis Menu Plugin JavaScript -->
     <script src="js/plugins/metisMenu/metisMenu.min.js"></script>
 
+    <!-- DataTables JavaScript -->
+    <script src="js/plugins/dataTables/jquery.dataTables.js"></script>
+    <script src="js/plugins/dataTables/dataTables.bootstrap.js"></script>
+
     <!-- Custom Theme JavaScript -->
-    <script src="js/sb-admin-2.js"></script>
-	<script>
-	</script>
+    <!-- script src="js/sb-admin-2.js"></script -->
 </body>
 
 </html>

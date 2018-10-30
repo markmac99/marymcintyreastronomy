@@ -3,7 +3,6 @@
 	$a1 = $_GET['Lat'];
 	$a2 = $_GET['Long'];
 	$a3 = date('Ymd');
-	$a3 = $_GET['date5'];
 	if ($a1=='') { $a1='51.88'; }
 	if ($a2=='') { $a2='-1.31'; }
 	setcookie("PGLati", $a1);
