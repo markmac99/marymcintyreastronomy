@@ -22,18 +22,6 @@
 #imMnMnNode3:hover .imMnMnFirstBg { background-image: url('../menu/image-gallery_h.png'); height: 26px; width: 120px;}
 #imMnMnNode3.imMnMnCurrent { background: none; background-image: none; }
 #imMnMnNode3.imMnMnCurrent span.imMnMnFirstBg { background-image: url('../menu/image-gallery_c.png'); height: 26px; width: 120px;}
-#imMnMnNode4 { background-image: url('../menu/marys-shop.png'); height: 26px; width: 120px; }
-#imMnMnNode4 .imMnMnFirstBg { height: 26px; width: 120px; }
-#imMnMnNode4:hover { background: none; background-image: none; }
-#imMnMnNode4:hover .imMnMnFirstBg { background-image: url('../menu/marys-shop_h.png'); height: 26px; width: 120px;}
-#imMnMnNode4.imMnMnCurrent { background: none; background-image: none; }
-#imMnMnNode4.imMnMnCurrent span.imMnMnFirstBg { background-image: url('../menu/marys-shop_c.png'); height: 26px; width: 120px;}
-#imMnMnNode5 { background-image: url('../menu/stuff.png'); height: 26px; width: 120px; }
-#imMnMnNode5 .imMnMnFirstBg { height: 26px; width: 120px; }
-#imMnMnNode5:hover { background: none; background-image: none; }
-#imMnMnNode5:hover .imMnMnFirstBg { background-image: url('../menu/stuff_h.png'); height: 26px; width: 120px;}
-#imMnMnNode5.imMnMnCurrent { background: none; background-image: none; }
-#imMnMnNode5.imMnMnCurrent span.imMnMnFirstBg { background-image: url('../menu/stuff_c.png'); height: 26px; width: 120px;}
 #imMnMnNode6 { background-image: url('../menu/planet-graphs.png'); height: 26px; width: 120px; }
 #imMnMnNode6 .imMnMnFirstBg { height: 26px; width: 120px; }
 #imMnMnNode6:hover { background: none; background-image: none; }

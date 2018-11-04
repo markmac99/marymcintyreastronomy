@@ -46,18 +46,6 @@
 								<span class="imMnMnTxt"><span class="imMnMnImg"></span>Image Gallery</span>
 							</span>
 						</a>
-					</li><li id="imMnMnNode4">
-						<a href="marys-shop.html">
-							<span class="imMnMnFirstBg">
-								<span class="imMnMnTxt"><span class="imMnMnImg"></span>Marys Shop</span>
-							</span>
-						</a>
-					</li><li id="imMnMnNode5">
-						<a href="stuff.html">
-							<span class="imMnMnFirstBg">
-								<span class="imMnMnTxt"><span class="imMnMnImg"></span>Stuff</span>
-							</span>
-						</a>
 					</li><li id="imMnMnNode6">
 						<a href="planet-graphs.html">
 							<span class="imMnMnFirstBg">
@@ -86,7 +74,7 @@ $type = isset($_GET['type']) ? $_GET['type'] : "pages"; ?>
 			</div>
 		</div>
 		<span class="imHidden"><a href="#imGoToCont" title="Read this page again">Back to content</a> | <a href="#imGoToMenu" title="Read this site again">Back to main menu</a></span>
-		<script type="text/javascript" src="cart/x5cart.js?57_636764557751424496"></script>
+		<script type="text/javascript" src="cart/x5cart.js?57_636769431448947909"></script>
 
 	<noscript class="imNoScript"><div class="alert alert-red">To use this website you must enable JavaScript</div></noscript>
 				</body>
