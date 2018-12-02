@@ -9,8 +9,9 @@ $imSettings['search']['general'] = array(
 		'0' => 'index.html',
 		'3' => 'image-gallery.html',
 		'4' => 'marys-shop.html',
-		'5' => 'stuff.html',
-		'6' => 'planet-graphs.html'
+		'6' => 'planet-graphs.html',
+		'8' => 'arduino-based-timeserver.html',
+		'9' => 'how-to-guides-and-documents.html'
 	),
 	'extendedScope' => array(
 	)

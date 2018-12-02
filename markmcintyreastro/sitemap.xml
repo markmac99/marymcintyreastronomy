@@ -2,37 +2,43 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
 	<url>
 		<loc>http://www.markmcintyreastro.co.uk/index.html</loc>
-		<lastmod>2018-11-04</lastmod>
+		<lastmod>2018-11-09</lastmod>
 		<changefreq>monthly</changefreq>
 		<priority>0.5</priority>
 	</url>
 	<url>
 		<loc>http://www.markmcintyreastro.co.uk/image-gallery.html</loc>
-		<lastmod>2018-11-04</lastmod>
+		<lastmod>2018-11-09</lastmod>
 		<changefreq>monthly</changefreq>
 		<priority>0.5</priority>
 	</url>
 	<url>
 		<loc>http://www.markmcintyreastro.co.uk/marys-shop.html</loc>
-		<lastmod>2018-11-04</lastmod>
-		<changefreq>monthly</changefreq>
-		<priority>0.5</priority>
-	</url>
-	<url>
-		<loc>http://www.markmcintyreastro.co.uk/stuff.html</loc>
-		<lastmod>2018-11-04</lastmod>
+		<lastmod>2018-11-09</lastmod>
 		<changefreq>monthly</changefreq>
 		<priority>0.5</priority>
 	</url>
 	<url>
 		<loc>http://www.markmcintyreastro.co.uk/imsitemap.html</loc>
-		<lastmod>2018-11-04</lastmod>
+		<lastmod>2018-11-09</lastmod>
 		<changefreq>monthly</changefreq>
 		<priority>0.5</priority>
 	</url>
 	<url>
 		<loc>http://www.markmcintyreastro.co.uk/planet-graphs.html</loc>
-		<lastmod>2018-11-04</lastmod>
+		<lastmod>2018-11-09</lastmod>
+		<changefreq>monthly</changefreq>
+		<priority>0.5</priority>
+	</url>
+	<url>
+		<loc>http://www.markmcintyreastro.co.uk/arduino-based-timeserver.html</loc>
+		<lastmod>2018-11-09</lastmod>
+		<changefreq>monthly</changefreq>
+		<priority>0.5</priority>
+	</url>
+	<url>
+		<loc>http://www.markmcintyreastro.co.uk/how-to-guides-and-documents.html</loc>
+		<lastmod>2018-11-09</lastmod>
 		<changefreq>monthly</changefreq>
 		<priority>0.5</priority>
 	</url>

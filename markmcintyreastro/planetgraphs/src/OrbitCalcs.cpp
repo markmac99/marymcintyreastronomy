@@ -5,6 +5,8 @@
 #include <string.h>
 #include <time.h>
 #include <math.h>
+#include <string>
+#include <algorithm>
 #include "OrbitCalcs.h"
 
 // model taken from http://www.stjarnhimlen.se/comp/ppcomp.html
@@ -40,7 +42,7 @@ double __stdcall GetOrbitalParam(int planetno, int what)
 	return 0.0;
 }
 
-double __stdcall MeanAnomaly(int planetno , double dd ) 
+double __stdcall MeanAnomaly(int planetno , double dd )
 {
 	double k = elements[planetno].MA[0];
 	double p = elements[planetno].MA[1];
@@ -242,8 +244,8 @@ double __stdcall PlanetXYZ(int planetno, double dd, int xyz, double lst, double 
 		zh = r * (sin(v + w) * sin(i));
 
 		r = sqrt(xh*xh + yh*yh + zh*zh);
-		
-//		if (planetno == 11) 
+
+//		if (planetno == 11)
 //			printf("%f %f %f %f %f %f %f %f \n", e, w, a, N, m, xh, yh, zh);
 
 		// coords in ecliptic plane
@@ -368,19 +370,18 @@ void trim(char *str)
 
 void cleanup_name(char* str)
 {
-	int i = 0;
+	size_t i, j;
 	char outstr[64] = { 0 };
 	trim(str);
-	strcpy(outstr, str);
-	for (i = 0; i < (int)strlen(outstr); i++)
+	std::string s = str;
+	std::replace(s.begin(),s.end(),' ','-');
+	std::replace(s.begin(),s.end(),'/','-');
+	strcpy(str, s.c_str());
+	for (i = 0, j=0; i < strlen(str); i++)
 	{
-		if (outstr[i] == '/') outstr[i] = '-';
-		if (outstr[i] == ' ') outstr[i] = '-';
-		if (outstr[i] == '(') 
-			strcpy(&outstr[i], &outstr[i+1]);
-		if (outstr[i] == ')') 
-			strcpy(&outstr[i], &outstr[i + 1]);
-		if (outstr[i] == ' ') outstr[i] = '-';
+			if (str[i]=='(' || str[i]==')')
+					i++;
+			outstr[j++] = str[i];
 	}
 	trim(outstr);
 	strcpy(str, outstr);

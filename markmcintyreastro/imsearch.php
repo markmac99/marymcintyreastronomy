@@ -46,6 +46,25 @@
 								<span class="imMnMnTxt"><span class="imMnMnImg"></span>Image Gallery</span>
 							</span>
 						</a>
+					</li><li id="imMnMnNode7">
+						<span class="imMnMnFirstBg">
+							<span class="imMnMnTxt"><span class="imMnMnImg"></span>Resources<span class="imMnMnLevelImg"></span></span>
+						</span>
+						<ul class="auto">
+							<li id="imMnMnNode8" class="imMnMnFirst">
+								<a href="arduino-based-timeserver.html">
+									<span class="imMnMnBorder">
+										<span class="imMnMnTxt"><span class="imMnMnImg"></span>Arduino based Timeserver</span>
+									</span>
+								</a>
+							</li><li id="imMnMnNode9" class="imMnMnLast">
+								<a href="how-to-guides-and-documents.html">
+									<span class="imMnMnBorder">
+										<span class="imMnMnTxt"><span class="imMnMnImg"></span>How To Guides and Documents</span>
+									</span>
+								</a>
+							</li>
+						</ul>
 					</li><li id="imMnMnNode6">
 						<a href="planet-graphs.html">
 							<span class="imMnMnFirstBg">
@@ -74,7 +93,7 @@ $type = isset($_GET['type']) ? $_GET['type'] : "pages"; ?>
 			</div>
 		</div>
 		<span class="imHidden"><a href="#imGoToCont" title="Read this page again">Back to content</a> | <a href="#imGoToMenu" title="Read this site again">Back to main menu</a></span>
-		<script type="text/javascript" src="cart/x5cart.js?57_636769431448947909"></script>
+		<script type="text/javascript" src="cart/x5cart.js?57_636774032063160083"></script>
 
 	<noscript class="imNoScript"><div class="alert alert-red">To use this website you must enable JavaScript</div></noscript>
 				</body>
