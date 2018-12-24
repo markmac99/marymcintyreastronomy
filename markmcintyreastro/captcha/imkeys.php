@@ -1,4 +1,4 @@
 <?php
 	$oNameList = array("pgn","y5r","lrs","8st","pyj","j62","p7m","8r5","uul","pyu");
-	$oCharList = array("P","7","N","W","J","Y","U","G","F","L");
+	$oCharList = array("J","5","Z","4","E","3","T","U","W","T");
 // End of file imkeys.php

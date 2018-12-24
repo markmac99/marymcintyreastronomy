@@ -11,7 +11,8 @@ $imSettings['search']['general'] = array(
 		'4' => 'marys-shop.html',
 		'6' => 'planet-graphs.html',
 		'8' => 'arduino-based-timeserver.html',
-		'9' => 'how-to-guides-and-documents.html'
+		'9' => 'how-to-guides-and-documents.html',
+		'10' => 'conjunctions-link.html'
 	),
 	'extendedScope' => array(
 	)

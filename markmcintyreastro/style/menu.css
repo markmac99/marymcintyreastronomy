@@ -34,6 +34,12 @@
 #imMnMnNode7:hover .imMnMnFirstBg { background-image: url('../menu/resources_h.png'); height: 26px; width: 120px;}
 #imMnMnNode7.imMnMnCurrent { background: none; background-image: none; }
 #imMnMnNode7.imMnMnCurrent span.imMnMnFirstBg { background-image: url('../menu/resources_c.png'); height: 26px; width: 120px;}
+#imMnMnNode10 { background-image: url('../menu/conjunctions.png'); height: 26px; width: 120px; }
+#imMnMnNode10 .imMnMnFirstBg { height: 26px; width: 120px; }
+#imMnMnNode10:hover { background: none; background-image: none; }
+#imMnMnNode10:hover .imMnMnFirstBg { background-image: url('../menu/conjunctions_h.png'); height: 26px; width: 120px;}
+#imMnMnNode10.imMnMnCurrent { background: none; background-image: none; }
+#imMnMnNode10.imMnMnCurrent span.imMnMnFirstBg { background-image: url('../menu/conjunctions_c.png'); height: 26px; width: 120px;}
 #imMnMn .imMnMnFirstBg .imMnMnTxt {display: none;}
 #imMnMn > ul > li.imMnMnSeparator { background: transparent url('../res/separatorh.png') no-repeat center center; width: 10px; height: 26px; }
 #imMnMn .imMnMnFirstBg { position: relative; display: block; background-repeat: no-repeat; cursor: pointer; width: 100%; }
