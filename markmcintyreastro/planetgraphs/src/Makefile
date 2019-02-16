@@ -14,7 +14,7 @@
 CC = gcc
 CFLAGS  = -g -Wall
 
-all: orbitcalcs cometpp pgsummary
+all: orbitcalcs cometpp pgsummary conjunctioncalcs
 
 default: orbitcalcs
 
@@ -22,6 +22,7 @@ install: orbitcalcs cometpp pgsummary
 	install -m 755 orbitcalcs /var/www/html/markmcintyreastro/planetgraphs/
 	install -m 755 cometpp /var/www/html/markmcintyreastro/planetgraphs/
 	install -m 755 pgsummary /var/www/html/markmcintyreastro/planetgraphs/
+	install -m 755 conjunctioncalcs /var/www/html/markmcintyreastro/planetgraphs/
 	
 orbitcalcs: main.o DateMaths.o InitStaticData.o MagAndSize.o OrbitCalcs.o Perturbations.o Pluto.o TransitRiseSet.o Outputter.o Comets.o
 	$(CC) $(CFLAGS) -o orbitcalcs main.o DateMaths.o InitStaticData.o MagAndSize.o OrbitCalcs.o Perturbations.o Pluto.o TransitRiseSet.o Outputter.o Comets.o -lstdc++ -lm
@@ -31,6 +32,9 @@ cometpp: cometmain.o DateMaths.o InitStaticData.o MagAndSize.o OrbitCalcs.o Pert
 
 pgsummary: summarycalc.o DateMaths.o InitStaticData.o MagAndSize.o OrbitCalcs.o Perturbations.o Pluto.o TransitRiseSet.o Outputter.o Comets.o
 	$(CC) $(CFLAGS) -o pgsummary summarycalc.o DateMaths.o InitStaticData.o MagAndSize.o OrbitCalcs.o Comets.o Perturbations.o Pluto.o TransitRiseSet.o Outputter.o -lstdc++ -lm
+
+conjunctioncalcs: ConjunctionCalculator.o DateMaths.o InitStaticData.o MagAndSize.o OrbitCalcs.o Perturbations.o Pluto.o TransitRiseSet.o Outputter.o Comets.o
+	$(CC) $(CFLAGS) -o conjunctioncalcs ConjunctionCalculator.o DateMaths.o InitStaticData.o MagAndSize.o OrbitCalcs.o Comets.o Perturbations.o Pluto.o TransitRiseSet.o Outputter.o -lstdc++ -lm
 
 summarycalc.o: summarycalc.cpp OrbitCalcs.h Comets.h  
 	$(CC) $(CFLAGS) -c summarycalc.cpp
@@ -67,6 +71,10 @@ TransitRiseSet.o:  TransitRiseSet.cpp OrbitCalcs.h
 
 Outputter.o:  Outputter.cpp OrbitCalcs.h
 	$(CC) $(CFLAGS) -c Outputter.cpp
+
+ConjunctionCalculator.o: ConjunctionCalculator.cpp OrbitCalcs.h Comets.h  
+	$(CC) $(CFLAGS) -c ConjunctionCalculator.cpp
+
 
 # To start over from scratch, type 'make clean'.  This
 # removes the executable file, as well as old .o object
