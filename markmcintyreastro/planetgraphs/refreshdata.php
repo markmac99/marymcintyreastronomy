@@ -81,7 +81,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="https://www.markmcintyreastro.co.uk/"><img src=""images/MJMMLogo-sm.jpg" alt="Mark McIntyre, Logo"/></a>
+                <a class="navbar-brand" href="https://www.markmcintyreastro.co.uk/"><img src="images/MJMMLogo-sm.jpg" alt="Mark McIntyre, Logo"/></a>
             </div>
             <!-- /.navbar-header -->
 

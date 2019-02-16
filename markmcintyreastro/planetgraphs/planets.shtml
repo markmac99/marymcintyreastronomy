@@ -67,7 +67,8 @@
 						if (!lati) lati='51.88';
 						var longi=readCookie('PGLongi');
 						if (!longi) longi='-1.31';
-						document.write("\<font color=\"Red\"\> Observer location " + lati +" " +longi+ "\<font\>" );
+						var cloc=readCookie('PGSessCookie1');
+						document.write("\<font color=\"Red\"\> Observer location " + lati +" " +longi+ " " +cloc+ "\<font\>" );
 					</script>
                     <!-- <!--#include virtual="location.html" --> -->
                     <a href="aboutthis.shtml"><i class="fa fa-user fa-fw"></i> About these calcs</a>
