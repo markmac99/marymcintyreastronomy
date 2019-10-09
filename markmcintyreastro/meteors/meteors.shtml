@@ -3,6 +3,7 @@
 	<head>
 		<title>Mark McIntyre Astronomy - Mark McIntyre Astronomy and Astrophotography</title>
 		<meta charset="utf-8" />
+		<meta http-equiv="refresh" content="180"/>
 		<!--[if IE]><meta http-equiv="ImageToolbar" content="False" /><![endif]-->
 		<meta name="description" content="My astronomy images and other related material" />
 		<meta name="keywords" content="astronomy&lt;br /&gt;astrophotography&lt;br /&gt;astrophysics&lt;br /&gt;space&lt;br /&gt;" />
@@ -96,9 +97,10 @@
 						<div id="imCell_1" class="imGrid[0, 0]"><div id="imCellStyleGraphics_1"></div><div id="imCellStyle_1">	<div class="text-tab-content"  id="imTextObject_1_tab0" style="text-align: left;">
 								<div class="text-inner">
 									<p style="text-align: left;"><span class="fs20"><span class="ff1 cf0">
-Fireball and Meteor Data<br>
-This page contains a list of the CSV files that I've generated from UFOCapture
-<br>
+<font size=16><b>Fireball and Meteor Data</b></font><br>
+<u>Radio Meteor info</u><br>
+Link to my Spectrum Lab config file: <a href="MetScat_MJMM.USR">MetScat_MJMM.USR</a></br><br>
+<u> UFOCap monthly CSV files</u><br>
 <!--#include virtual="meteorlist.html" -->
 
 </span></span></p>
@@ -106,7 +108,7 @@ This page contains a list of the CSV files that I've generated from UFOCapture
 							</div>
 						</div></div>
 					</div>
-				</div>
+				<!--#include virtual="radiolist.html" --> </div>
 				
 				<div id="imFooPad" style="height: 0px; float: left;">&nbsp;</div><div id="imBtMn"><a href="/index.html">Home Page</a> | <a href="/image-gallery.html">Image Gallery</a> | <a href="/arduino-based-timeserver.html">Resources</a> | <a href="/planet-graphs.html">Planet Graphs</a> | <a href="/conjunctions-link.html">Conjunctions</a> | <a href="/imsitemap.html">General Site Map</a></div>				  
 				<div class="imClear"></div>
