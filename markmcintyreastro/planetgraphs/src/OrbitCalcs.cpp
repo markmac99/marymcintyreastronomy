@@ -33,12 +33,12 @@ double __stdcall GetOrbitalParam(int planetno, int what)
 		return Eccentricity(planetno,0);
 	if (what == 'M' || what =='m')
 		return MeanAnomaly(planetno, 0);
-	if (what == 'G' || what =='G')
+	if (what == 'G' || what =='g')
 		return elements[planetno].mag[0];
 	if (what == 's' || what == 'S')
 		return elements[planetno].siz *(planetno == MOON ? ERAD*60 : AU) / (3600.0 * RAD2DEG);
 	if (what == 'T' ||  what =='t')
-		return (double)(elements[planetno].epoch[0]*10000+ elements[planetno].epoch[1] * 10+ elements[planetno].epoch[2]);
+		return (double)(elements[planetno].epoch[0] * 10000+ elements[planetno].epoch[1] * 10 + elements[planetno].epoch[2]);
 	return 0.0;
 }
 
@@ -205,7 +205,8 @@ double __stdcall AltAtTransit(int planetno, double dtval, double lat, double lon
 {
 //	if (planetno > maxloaded) return 0;
 	double tt = TimeofTransit(planetno, dtval, lat, longi);
-	double dd = AstroDaysFromDt(dtval + tt / 24.0);
+	double dv = dtval + tt / 24.0;
+	double dd = AstroDaysFromDt(dv);
 	double lst = LSTFromDt(dtval + tt/24.0, longi)/24.0;
 	return PlanetXYZ(planetno, dd, 8, lst, lat, temp, pres);
 }
@@ -362,7 +363,7 @@ void trim(char *str)
 	char outstr[64] = { 0 };
 	while (str[i] == ' ')i++;
 	strcpy(outstr, str + i);
-	i = strlen(outstr) - 1;
+	i = (int)strlen(outstr) - 1;
 	while (outstr[i] == ' ')i--;
 	outstr[i + 1] = 0;
 	strcpy(str, outstr);

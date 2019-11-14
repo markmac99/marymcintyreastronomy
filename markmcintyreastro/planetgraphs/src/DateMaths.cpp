@@ -21,7 +21,11 @@ char* TimeToStr(double t)
 double __stdcall AstroDaysFromDt(double dtval)
 {
 	int yy, mo, dd, hh, mm, ss;
+//	FILE* f = fopen("c:/temp/log.txt", "w");
+//	fprintf(f, "%f\n", dtval);
 	GetDateFromDtval(dtval, yy, mo, dd, hh, mm, ss);
+//	fprintf(f, "%d %d %d %d %d %d\n", yy, mo, dd, hh, mm, ss);
+//	fclose(f);
 	return days(yy, mo, dd, hh, mm, ss);
 }
 
@@ -51,8 +55,8 @@ double __stdcall JulianDate(int yy, int mo, int dd, int hh, int mm, int ss)
 	int A = yy / 100;
 	int B  = 2 - A + A / 4;
 	int C = (int)(365.25 * yy);
-	int e = (int)(30.6001 * (mo + 1));
-	JD = B + C + dd + e + 1720994.5;
+	int e = (int)(30.6001 * ((double)mo + 1));
+	JD = (double)B + (double)C + (double)dd + (double)e + 1720994.5;
 	double dayfrac = hh / 24.0 + mm / (24 * 60.0) + ss / (24 * 3600.0);
 	JD = JD + dayfrac;
 	return JD;
@@ -60,7 +64,6 @@ double __stdcall JulianDate(int yy, int mo, int dd, int hh, int mm, int ss)
 
 double __stdcall GetDtvalFromDate(int yy, int mo, int dd, int hh, int mm, int ss)
 {
-	time_t unixdt;
 	double dtval;
 	struct tm tmval;
 
@@ -71,9 +74,11 @@ double __stdcall GetDtvalFromDate(int yy, int mo, int dd, int hh, int mm, int ss
 	tmval.tm_min =mm;
 	tmval.tm_sec=ss;
 #ifndef _WIN32
+	time_t unixdt;
 	tmval.tm_isdst=0;
 	unixdt = mktime(&tmval);
 #else
+	__time64_t unixdt;
 	unixdt = _mkgmtime64(&tmval);
 #endif
 	dtval = unixdt / 86400.0;

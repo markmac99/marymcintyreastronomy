@@ -3,6 +3,11 @@
 
 // model taken from http://www.stjarnhimlen.se/comp/ppcomp.html
 
+double __stdcall PhaseAngle(long planetno, double dd)
+{
+	return PhaseOrElong(planetno, dd, 0);
+}
+
 double __stdcall Phase(long planetno, double dd)
 {
 	return PhaseOrElong(planetno, dd, 1);
@@ -24,13 +29,19 @@ double __stdcall PhaseOrElong(long planetno, double dd, short poe)
 		r1 = r1 * ERAD / AU;
 	}
 	double argv = 0;
-	if (poe == 1)
+	if (poe < 2 )
 	{
-		// sun-earth phase angle is given by acos(argv)
-		argv = (r*r + r1*r1 - s*s) / (2 * r * r1); //sun-earth phase angle
-
-		// phase is given by  (1 + cos(spa)) / 2 
-		return ((1.0 + argv) / 2.0);
+		argv = (r*r + r1*r1 - s*s) / (2 * r * r1); 
+		if (poe == 0)
+		{
+			// phase angle is given by acos(argv)
+			double phangle = acos(argv);
+			if (phangle > 180) phangle = 360.0 - phangle;
+			return phangle;
+		}
+		else
+			// phase is given by  (1 + cos(spa)) / 2 
+			return ((1.0 + argv) / 2.0);
 	}
 	else
 	{
@@ -59,7 +70,7 @@ double __stdcall VisualMagnitude(long planetno, double dd)
 	double distearth = PlanetXYZ(planetno, dd, 10, 0, 0, 0, 0);
 	double distsun = PlanDist(planetno, dd);
 
-	double phase = Phase(planetno, dd);
+	double phase = PhaseAngle(planetno, dd)*180/PI;
 	if (planetno == MOON)
 	{
 		distearth = distearth * ERAD / AU;

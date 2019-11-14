@@ -1,6 +1,3 @@
-#include "OrbitCalcs.h"
-#include "Comets.h"
-
 // shaddap with the fopen warnings
 #define _CRT_SECURE_NO_WARNINGS 1
 
@@ -8,9 +5,9 @@
 #include <math.h>
 #include <stdio.h>
 
-double MyRound(double input, int places, int updown);
-void addHeader(FILE* f, char* pname, char* typ);
-void addFooter(FILE* f, char* unt, char* typ, double minv, double maxv);
+#include "OrbitCalcs.h"
+#include "Comets.h"
+#include "Outputter.h"
 
 void addHeader(FILE* f, char* pname, char* typ)
 {
@@ -112,17 +109,18 @@ void CreateOutputFiles(double lati, double longi, double dt)
 
 		for (int i = 0; i <= maxiters; i++)
 		{
-			double alti = IsVisible(planetno, dt + intvl * i, lati, longi, 1, 1, 10, 1010);
-			double best = IsVisible(planetno, dt + intvl * i, lati, longi, 1, 2, 10, 1010);
-			double brig = VisualMagnitude(planetno, AstroDaysFromDt(dt + intvl * i));
-			double siz = ApparentSize(planetno, AstroDaysFromDt(dt + intvl * i));
+			double dv = (double)dt + ((double)intvl * i);
+			double alti = IsVisible(planetno, dv, lati, longi, 1, 1, 10, 1010);
+			double best = IsVisible(planetno, dv, lati, longi, 1, 2, 10, 1010);
+			double brig = VisualMagnitude(planetno, AstroDaysFromDt(dv));
+			double siz = ApparentSize(planetno, AstroDaysFromDt(dv));
 
 			if (siz > maxsiz) maxsiz = siz;
 			if (siz < minsiz) minsiz = siz;
 			if (brig > maxbri) maxbri = brig;
 			if (brig < minbri) minbri = brig;
 			if (alti > maxalt) maxalt = alti;
-			long tms2 = DtvalToUnixTS(dt + intvl * i + best);
+			long tms2 = DtvalToUnixTS(dv + (double)best);
 
 			if (i < maxiters)
 			{
@@ -137,7 +135,7 @@ void CreateOutputFiles(double lati, double longi, double dt)
 				fprintf(f3, "{time: %ld000, size: %.2lf}],\n", tms2, siz);
 			}
 			int yy, mo, dy, hh, mm, ss;
-			GetDateFromDtval(dt + intvl * i + best, yy, mo, dy, hh, mm, ss);
+			GetDateFromDtval(dv + best, yy, mo, dy, hh, mm, ss);
 			double dd = days(yy, mo, dy, 0, 0, 0);
 			double lst = LocalSiderealTime(yy, mo, dy, 0, 0, 0, longi);
 			double ra = PlanetXYZ(planetno, dd, 6, lst, lati, 10, 1010);
@@ -207,7 +205,8 @@ void CometOutputter(double lati, double longi, double dt)
 		for (int i = 0; i <= maxiters; i++)
 		{ 
 			int yr, mth, dy, hh, mm, ss;
-			GetDateFromDtval(dt + intvl * i, yr, mth, dy, hh, mm, ss);
+			double dv = (double)dt + (double)intvl * i;
+			GetDateFromDtval(dv, yr, mth, dy, hh, mm, ss);
 			double dd = days(yr, mth, dy, 0, 0, 0);
 			double lst = LocalSiderealTime(yr, mth, dy, 0, 0, 0, longi);
 
@@ -232,7 +231,7 @@ void CometOutputter(double lati, double longi, double dt)
 			if (mag > maxbri) maxbri = mag;
 			if (mag < minbri) minbri = mag;
 			if (alti > maxalt) maxalt = alti;
-			long tms2 = DtvalToUnixTS(dt + intvl * i + best);
+			long tms2 = DtvalToUnixTS(dv + (double)best);
 			if (i < maxiters)
 			{
 				fprintf(f1, "{time: %ld000, altitude: %.2lf},\n", tms2, alti);
@@ -244,7 +243,7 @@ void CometOutputter(double lati, double longi, double dt)
 				fprintf(f1, "{time: %ld000, altitude: %.2lf}],\n", tms2, alti);
 				fprintf(f2, "{time: %ld000, magnitude: %.2lf}],\n", tms2, mag);
 			//	fprintf(f3, "{time: %ld000, size: %.2lf}],\n", tms2, siz);
-				GetDateFromDtval(dt + intvl * i + best, yr, mth, dy, hh, mm, ss);
+				GetDateFromDtval(dv + (double)best, yr, mth, dy, hh, mm, ss);
 				fprintf(f4, "%4.4d-%2.2d-%2.2d %2.2d:%2.2d:%2.2d, %.2lf, %.2lf, %.2lf, %.2lf, %s, %02lf\n",
 					yr, mth, dy, hh, mm, ss, alti, mag, 0.0, azi, fmt_hours(ra), decl);
 			}
