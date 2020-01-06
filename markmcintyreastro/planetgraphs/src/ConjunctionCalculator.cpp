@@ -10,6 +10,7 @@
 #include <time.h>
 #include <math.h>
 #include <iostream>
+#include "OrbitCalcs.h"
 
 typedef struct Conjunction
 {
@@ -36,9 +37,8 @@ void ConjWriteHeader(FILE* outf);
 void ConjCreateOutputLine(FILE* outf, struct Conjunction c);
 void ConjWriteFooter(FILE* outf);
 
-struct Conjunction Conjunctions[500] = { 0 };
+struct Conjunction Conjunctions[1000] = { 0 };
 
-#include "OrbitCalcs.h"
 void addConj(int &conjno, int yr, int mm, int dy, int p1, int p2, double radiff, double decdiff, 
 	double minsep, double ra, double dec, double alti, double best);
 
@@ -85,9 +85,11 @@ int main(int argc, char** argv)
 		if (j == 9)j++; //skip conjunctions with the Earth - these are unlikely...
 		for (int k = j + 1; k < maxloaded; k++)
 		{
-			if (k == 9)k++; //skip conjunctions with the Earth again.
+			if (k == 9)k++; //skip conjunctions with the Earth - again.
 			for (int i = (int)dd; i < maxdate + dd; i++)
 			{
+				double lst2 = LSTFromDt(i, longi);
+
 				double ra1 = PlanetXYZ(j, i, 6, lst, lati, temp, press);
 				double dec1 = PlanetXYZ(j, i, 7, lst, lati, temp, press);
 				double ra2 = PlanetXYZ(k, i, 6, lst, lati, temp, press);
@@ -97,7 +99,8 @@ int main(int argc, char** argv)
 				// catch conjunctions where ra or dec straddles the zero line
 				if (radiff > 180) radiff = fabs(radiff-360); 
 				if (decdiff > 180) decdiff = fabs(decdiff-360);
-				if (radiff < minconj && decdiff < minconj)
+				double minsep = sqrt(radiff * radiff + decdiff * decdiff);
+				if (minsep < minconj)
 				{
 					time_t unixdt;
 					struct tm t = { 0 };
@@ -110,15 +113,15 @@ int main(int argc, char** argv)
 #else
 					unixdt = _mkgmtime64(&t);
 #endif
-					double minsep = sqrt(radiff*radiff+decdiff*decdiff);
 					tstruct = gmtime(&unixdt);
 
 					double dt = GetDtvalFromDate(tstruct->tm_year + 1900, tstruct->tm_mon + 1, tstruct->tm_mday, 0, 0, 0);
 					double alti = IsVisible(k, dt, lati, longi, 1, 1, temp, press);
 					double best = IsVisible(k, dt, lati, longi, 1, 2, temp, press);
 					
-					if(alti> 0) addConj(conjno, tstruct->tm_year + 1900, tstruct->tm_mon + 1, tstruct->tm_mday, 
-						j, k, radiff, decdiff, minsep, ra1, dec1, alti, best);
+					if(alti> 0) 
+						addConj(conjno, tstruct->tm_year + 1900, tstruct->tm_mon + 1, tstruct->tm_mday, 
+							j, k, radiff, decdiff, minsep, ra1, dec1, alti, best);
 				}
 					
 			}
@@ -129,17 +132,27 @@ int main(int argc, char** argv)
 
 	printf("writing header"); fflush(stdout);
 	FILE* outf = fopen("conjunctions.js","w");
+	FILE* csvf = fopen("conjunctions.csv", "w");
 	ConjWriteHeader(outf);
+	fprintf(csvf,"Subject,StartDate,AllDayEvent, Description\n");
 	for (int i = 1; i <= conjno; i++)
 	{
 		Conjunction c = Conjunctions[i];
 		fprintf(stdout, "%4.4d-%2.2d-%2.2d,%8.8s,%8.8s,%0.4f,%0.4f,%0.4f,%2.2d,%2.2d,%5.2f,%5.2f,%5.2f,%5.2f\n",
 			c.yr, c.mth, c.dy, c.p1name, c.p2name,
 			c.radiff, c.decdiff, c.minsep, c.to, c.from, c.p1ra, c.p1dec, c.bestalti, c.besttime*24);
+		char* timeofday ="night";
+		if (c.besttime >0.25 && c.besttime < 0.5) timeofday = "dawn";
+		if (c.besttime > 0.5 && c.besttime < 0.75 ) timeofday = "dusk";
+
+		fprintf(csvf, "%s-%s Conjunction, %02d/%02d/%04d,true,%s near %s at %s %s\n", 
+			c.p1name, c.p2name, c.mth, c.dy, c.yr,
+			c.p1name,c.p2name, timeofday, c.p1==1?"(check prev day too)":"");
 		ConjCreateOutputLine(outf, c);
 	}
 	ConjWriteFooter(outf);
 	fclose(outf);
+	fclose(csvf);
 
 	return 0;
 }
