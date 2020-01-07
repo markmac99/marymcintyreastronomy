@@ -76,6 +76,7 @@
 							<div class="panel panel-default">
 								<div class="panel-heading">
 									<h3>Conjunctions</h3><br>
+									<a href="data/conjunctions.csv">download in Google Calendar format</a>
 									NB: This generic data is for a central UK location..
 								</div>
 								<!-- /.panel-heading -->
