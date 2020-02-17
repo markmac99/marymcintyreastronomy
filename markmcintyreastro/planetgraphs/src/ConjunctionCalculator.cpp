@@ -17,6 +17,7 @@ typedef struct Conjunction
 	int yr;
 	int mth;
 	int dy;
+	int hr;
 	int p1;
 	char p1name[12];
 	double p1ra, p1dec;
@@ -28,7 +29,7 @@ typedef struct Conjunction
 	int from;
 	int to;
 	double bestalti;
-	double besttime;
+	double sunriseset;
 }_Conjunction;
 
 int CompareDates(const void *c1, const void *c2);
@@ -39,8 +40,8 @@ void ConjWriteFooter(FILE* outf);
 
 struct Conjunction Conjunctions[1000] = { 0 };
 
-void addConj(int &conjno, int yr, int mm, int dy, int p1, int p2, double radiff, double decdiff, 
-	double minsep, double ra, double dec, double alti, double best);
+void addConj(int &conjno, int yr, int mm, int dy, int hr, int p1, int p2, double radiff, double decdiff, 
+	double minsep, double ra, double dec, double alti, double sunriseset);
 
 int main(int argc, char** argv)
 {
@@ -65,7 +66,6 @@ int main(int argc, char** argv)
 
 //	tstruct->tm_mday=7;// for debugging purposes, set to start of current month
 
-	double dy = tstruct->tm_mday + tstruct->tm_hour / 24.0 + tstruct->tm_min / (24.0*60.0);
 	double dd = days(yr, mth, tstruct->tm_mday, 0, 0, 0);
 
 	// local sidereal time
@@ -73,9 +73,9 @@ int main(int argc, char** argv)
 		tstruct->tm_hour, tstruct->tm_min, tstruct->tm_sec, longi) / 24.0;
 
 	printf("loading data\n"); fflush(stdout);
-	double maxloaded = LoadOrbitalElements(elements);
+	int maxloaded = LoadOrbitalElements(elements);
 
-	printf("loaded data\n"); fflush(stdout);
+	printf("Loaded %d planets, calculating conjunctions for %ld days\n", maxloaded, maxdate); fflush(stdout);
 	if (maxloaded > 10) maxloaded = 11; // just the planets thanks
 	int conjno = 0;
 
@@ -86,14 +86,37 @@ int main(int argc, char** argv)
 		for (int k = j + 1; k < maxloaded; k++)
 		{
 			if (k == 9)k++; //skip conjunctions with the Earth - again.
-			for (int i = (int)dd; i < maxdate + dd; i++)
-			{
-				double lst2 = LSTFromDt(i, longi);
 
-				double ra1 = PlanetXYZ(j, i, 6, lst, lati, temp, press);
-				double dec1 = PlanetXYZ(j, i, 7, lst, lati, temp, press);
-				double ra2 = PlanetXYZ(k, i, 6, lst, lati, temp, press);
-				double dec2 = PlanetXYZ(k, i, 7, lst, lati, temp, press);
+			for (int i = 0; i < maxdate*24; i++)
+			{
+				double sunalt = -0.8333;   // civil sunset when centre of sun is 0.8333 degrees below horizon
+				double nowdt = dd + i / 24.0;
+				time_t now = AstroDtToUnixTS(nowdt);
+				struct tm* tstruct = gmtime(&now);
+				// current hour - adding 1/24 is not precise hence rounding up
+				int currhour = tstruct->tm_hour + (tstruct->tm_min > 35 ? 1 : 0); 
+				double dtval = GetDtvalFromDate(tstruct->tm_year + 1900, tstruct->tm_mon + 1,
+					tstruct->tm_mday, tstruct->tm_hour, tstruct->tm_min, 0);
+
+				double sunrise = RiseSet(SUN, dtval, lati, longi, 1, sunalt, 10, 1010);
+				double sunset = RiseSet(SUN, dtval, lati, longi, 2, sunalt, 10, 1010);
+
+				// no point calculating during daylight
+				if (currhour > sunrise && currhour < sunset)
+					continue; 
+
+				double sunriseset = sunset;
+				if (currhour < sunrise) 
+						sunriseset = sunrise;
+
+				// local sidereal time
+				double lst2 = LocalSiderealTime(tstruct->tm_year + 1900, tstruct->tm_mon + 1, tstruct->tm_mday,
+					tstruct->tm_hour, tstruct->tm_min, tstruct->tm_sec, longi)/24.0;
+
+				double ra1 = PlanetXYZ(j, nowdt, 6, lst, lati, temp, press);
+				double dec1 = PlanetXYZ(j, nowdt, 7, lst, lati, temp, press);
+				double ra2 = PlanetXYZ(k, nowdt, 6, lst, lati, temp, press);
+				double dec2 = PlanetXYZ(k, nowdt, 7, lst, lati, temp, press);
 				double radiff = fabs(ra1-ra2);
 				double decdiff = fabs(dec1-dec2);
 				// catch conjunctions where ra or dec straddles the zero line
@@ -102,35 +125,23 @@ int main(int argc, char** argv)
 				double minsep = sqrt(radiff * radiff + decdiff * decdiff);
 				if (minsep < minconj)
 				{
-					time_t unixdt;
-					struct tm t = { 0 };
-					t.tm_year = yr - 1900;
-					t.tm_mon = mth-1;
-					t.tm_mday = (int)(dy + i - dd);
-#ifndef _WIN32
-					t.tm_isdst = 0;
-					unixdt = mktime(&t);
-#else
-					unixdt = _mkgmtime64(&t);
-#endif
-					tstruct = gmtime(&unixdt);
+					double alti = PlanetXYZ(j, nowdt, 8, lst2, lati, temp, press);
 
-					double dt = GetDtvalFromDate(tstruct->tm_year + 1900, tstruct->tm_mon + 1, tstruct->tm_mday, 0, 0, 0);
-					double alti = IsVisible(k, dt, lati, longi, 1, 1, temp, press);
-					double best = IsVisible(k, dt, lati, longi, 1, 2, temp, press);
-					
-					if(alti> 0) 
-						addConj(conjno, tstruct->tm_year + 1900, tstruct->tm_mon + 1, tstruct->tm_mday, 
-							j, k, radiff, decdiff, minsep, ra1, dec1, alti, best);
+					if (alti > 0)
+					{
+						addConj(conjno, tstruct->tm_year + 1900, tstruct->tm_mon + 1, tstruct->tm_mday,
+							currhour, 
+							j, k, radiff, decdiff, minsep, ra1, dec1, alti, sunriseset);
+					}
 				}
 					
 			}
 		}
 	}
-	printf("conjunctions calculated, sorting data\n"); fflush(stdout);
+	printf("%d conjunctions calculated, sorting data\n", conjno); fflush(stdout);
 	qsort(Conjunctions, conjno, sizeof(struct Conjunction), CompareDates);
 
-	printf("writing header"); fflush(stdout);
+	printf("writing header\n"); fflush(stdout);
 	FILE* outf = fopen("conjunctions.js","w");
 	FILE* csvf = fopen("conjunctions.csv", "w");
 	ConjWriteHeader(outf);
@@ -138,16 +149,19 @@ int main(int argc, char** argv)
 	for (int i = 1; i <= conjno; i++)
 	{
 		Conjunction c = Conjunctions[i];
-		fprintf(stdout, "%4.4d-%2.2d-%2.2d,%8.8s,%8.8s,%0.4f,%0.4f,%0.4f,%2.2d,%2.2d,%5.2f,%5.2f,%5.2f,%5.2f\n",
+		fprintf(stdout, "%4.4d-%2.2d-%2.2d,%8.8s,%8.8s,%7.4f,%7.4f,%7.4f,%3.3d,%3.3d,%6.2f,%6.2f,%6.2f,%3.3d\n",
 			c.yr, c.mth, c.dy, c.p1name, c.p2name,
-			c.radiff, c.decdiff, c.minsep, c.to, c.from, c.p1ra, c.p1dec, c.bestalti, c.besttime*24);
-		char* timeofday ="night";
-		if (c.besttime >0.25 && c.besttime < 0.5) timeofday = "dawn";
-		if (c.besttime > 0.5 && c.besttime < 0.75 ) timeofday = "dusk";
+			c.radiff, c.decdiff, c.minsep, c.to, c.from, c.p1ra, c.p1dec, c.bestalti, c.hr);
+		char timeofday[] ="at night";
 
-		fprintf(csvf, "%s-%s Conjunction, %02d/%02d/%04d,true,%s near %s at %s %s\n", 
-			c.p1name, c.p2name, c.mth, c.dy, c.yr,
-			c.p1name,c.p2name, timeofday, c.p1==1?"(check prev day too)":"");
+		if (c.hr >= (c.sunriseset-2) && c.hr <=c.sunriseset) 
+			strcpy(timeofday, "at dawn");
+		else if (c.hr >= c.sunriseset && c.hr <= (c.sunriseset+2)) 
+			strcpy(timeofday, "at dusk");
+		else if (c.hr > c.sunriseset && c.hr <= c.sunriseset) strcpy(timeofday, "in day");
+
+		fprintf(csvf, "%s-%s Conjunction, %02d/%02d/%04d,true,%s near %s %s, %2.2d hrs\n", 
+			c.p1name, c.p2name, c.mth, c.dy, c.yr, c.p1name, c.p2name, timeofday,c.hr);
 		ConjCreateOutputLine(outf, c);
 	}
 	ConjWriteFooter(outf);
@@ -168,8 +182,8 @@ int CompareDates(const void	 *c1, const void *c2)
 	return 0;
 }
 
-void addConj(int &conjno, int yr, int mm, int dy, int p1, int p2, double radiff, double decdiff, 
-	double minsep, double ra, double dec, double alti, double best)
+void addConj(int &conjno, int yr, int mm, int dy, int hr, int p1, int p2, double radiff, double decdiff, 
+	double minsep, double ra, double dec, double alti, double sunriseset)
 {
 	struct Conjunction c;
 	c = Conjunctions[conjno];
@@ -183,7 +197,7 @@ void addConj(int &conjno, int yr, int mm, int dy, int p1, int p2, double radiff,
 			Conjunctions[conjno].yr = yr;
 			Conjunctions[conjno].mth = mm;
 			Conjunctions[conjno].dy = dy;
-			Conjunctions[conjno].yr = yr;
+			Conjunctions[conjno].hr = hr;
 			Conjunctions[conjno].radiff = radiff;
 			Conjunctions[conjno].decdiff = decdiff;
 			Conjunctions[conjno].minsep = minsep;
@@ -191,7 +205,7 @@ void addConj(int &conjno, int yr, int mm, int dy, int p1, int p2, double radiff,
 			Conjunctions[conjno].p1ra=ra;
 			Conjunctions[conjno].p1dec=dec;
 			Conjunctions[conjno].bestalti = alti;
-			Conjunctions[conjno].besttime = best;
+			Conjunctions[conjno].sunriseset = sunriseset;
 		}
 		else
 			Conjunctions[conjno].to++;
@@ -202,7 +216,7 @@ void addConj(int &conjno, int yr, int mm, int dy, int p1, int p2, double radiff,
 		Conjunctions[conjno].yr = yr;
 		Conjunctions[conjno].mth = mm;
 		Conjunctions[conjno].dy = dy;
-		Conjunctions[conjno].yr = yr;
+		Conjunctions[conjno].hr = hr;
 		Conjunctions[conjno].radiff = radiff;
 		Conjunctions[conjno].decdiff = decdiff;
 		Conjunctions[conjno].minsep = minsep;
@@ -215,7 +229,7 @@ void addConj(int &conjno, int yr, int mm, int dy, int p1, int p2, double radiff,
 		Conjunctions[conjno].p1ra = ra;
 		Conjunctions[conjno].p1dec = dec;
 		Conjunctions[conjno].bestalti = alti;
-		Conjunctions[conjno].besttime = best;
+		Conjunctions[conjno].sunriseset = sunriseset;
 	}
 }
 
@@ -231,9 +245,7 @@ void ConjCreateOutputLine(FILE* outf, struct Conjunction c)
 	fprintf(outf, "var cell = row.insertCell(3);\n");
 	fprintf(outf, "cell.innerHTML = \"%2.2f\";\n", c.minsep);
 	fprintf(outf, "var cell = row.insertCell(4);\n");
-	int hh = (int)(24 * c.besttime);
-	int mm = (int)(60 * (24 *c.besttime - hh));
-	fprintf(outf, "cell.innerHTML = \"%2.2d:%2.2d\";\n", hh,mm);
+	fprintf(outf, "cell.innerHTML = \"%2.2d:00\";\n", c.hr);
 	fprintf(outf, "var cell = row.insertCell(5);\n");
 	if (c.bestalti <0.01)
 		fprintf(outf, "cell.innerHTML = \"N/V\";\n");

@@ -67,6 +67,7 @@
                             <p>
                             <b>Basis of Calculations</b><br>
                             This page displays conjunctions for the next two years as seen from the southern UK.
+		            The tabls lists any conjunction where the objects are less than about 3 degrees apart.
                             Details of how I calculate this are given on the <a href="aboutthis.shtml">About</a> page
                             </p>
                         </div>
@@ -76,7 +77,7 @@
 							<div class="panel panel-default">
 								<div class="panel-heading">
 									<h3>Conjunctions</h3><br>
-									<a href="data/conjunctions.csv">download in Google Calendar format</a>
+									<a href="data/conjunctions.csv">download in Google Calendar format</a><br>
 									NB: This generic data is for a central UK location..
 								</div>
 								<!-- /.panel-heading -->

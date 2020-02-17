@@ -26,7 +26,7 @@ double __stdcall RiseSet(int planetno, double dtval, double  lat, double longi, 
 	// calculate UT when the planet is due south
 
 	double dd, lst, lha, coslha;
-	int yy, mo, dy, hh, mm, ss, tz;
+	int yy, mo, dy, hh, mm, ss;
 	double ra, sunlong, gmst0, ut_sis=0;
 	double lati=0, decl=0;
 	double rs=0;
@@ -34,7 +34,6 @@ double __stdcall RiseSet(int planetno, double dtval, double  lat, double longi, 
 	GetDateFromDtval(dtval, yy, mo, dy, hh, mm, ss);
 	dd = days(yy, mo, dy, 12, 0, 0);
 	lst = LocalSiderealTime(yy, mo, dy, hh, mm, ss, lat);
-	tz = 0; // for GMT
 
 	if(planetno > MOON)
 		ut_sis = TimeofTransit(planetno, dtval, lat, longi);

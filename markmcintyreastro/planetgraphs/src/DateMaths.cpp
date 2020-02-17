@@ -134,7 +134,7 @@ double __stdcall LocalSiderealTime(int yy, int mo, int dd, int hh, int Mm, int s
 
 long __stdcall AstroDtToUnixTS(double dd)
 {
-	return  (long)((dd +35625-25569.0) * 86400.0);
+	return  (long)((dd +36525-25569.0) * 86400.0);
 }
 
 long __stdcall DtvalToUnixTS(double dtval)

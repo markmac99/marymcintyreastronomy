@@ -324,20 +324,39 @@ double __stdcall PlanetXYZ(int planetno, double dd, int xyz, double lst, double 
 		while (ra > 360.0)
 			ra = ra - 360.0;
 
-//		if (planetno == 11) printf("%f %f %f %f %f %f %f %f \n", ra, decl, xe, ye, ze, xh, yh, zh);
-
 		azi = AzFromRADec(lst, ra, decl, lat, 0, temp, pres);
 		alti = AzFromRADec(lst, ra, decl, lat, 1, temp, pres);
 
 		// correct to topographic coords (surface of earth)
 		// mainly relevant for the moon but worth doing for the others
-		alti = alti * PI / 180;
+		alti = alti /RAD2DEG;
 		if (planetno == MOON)
-			alti = alti - cos(alti) * asin(1 / r);
+			alti = alti - cos(alti) * asin(1 / distearth);
 		else
-			alti = alti - (8.794 / 3600.0) / RAD2DEG / r;
+			alti = alti - (8.794 / 3600.0) / RAD2DEG / distearth;
 
 		alti = alti * RAD2DEG;
+
+		// now correct RA and DEC to topographic coords
+		double par = (planetno==MOON? asin(1 / distearth): (8.794 / 3600)/distearth/RAD2DEG); // parallax of planet
+		double gclat = lat - 0.1924 * sin(2 * lat/RAD2DEG); //geocentric latitude of observer allowing for earth being oblate
+		double rho = 0.99833 + 0.00167 * cos(2 * lat/ RAD2DEG); // distance of observer from centre of earth
+		double HA = (lst * 360 - ra)/RAD2DEG; // planet's hour angle in radians
+		double g = atan(tan(gclat/RAD2DEG) / cos(HA)); // auxiliary angle 
+		double racorr, declcorr;
+
+		// formula breaks down close to the celestial poles though planets should never be there
+		if (fabs(decl) > 89.9999)
+			racorr = 0;
+		else 
+			racorr = (par * rho * cos(gclat / RAD2DEG) * sin(HA) / cos(decl / RAD2DEG))*RAD2DEG;
+
+		if (fabs(gclat) < 0.00001) // breaks down near earth's equator
+			declcorr = (par * rho * sin(-decl / RAD2DEG) * cos(HA)) * RAD2DEG;
+		else
+			declcorr = (par * rho * sin(gclat / RAD2DEG) * sin(g - decl / RAD2DEG) / sin(g))*RAD2DEG;
+		ra -= racorr ;
+		decl -= declcorr;
 	}
 	// results
 	switch (xyz)
